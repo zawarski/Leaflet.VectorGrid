@@ -12,6 +12,12 @@ Display gridded vector data (sliced GeoJSON or protobuf vector tiles) in Leaflet
 Because neither Leaflet.MapboxVectorTile nor Hoverboard will work on Leaflet 1.
 
 
+## Demo
+
+With sliced GeoJSON: http://ivansanchez.github.io/Leaflet.VectorGrid/demo/demo-geojson.html
+
+With protobuf `VectorTile`s: http://ivansanchez.github.io/Leaflet.VectorGrid/demo/demo-vectortiles.html
+
 
 ## Docs
 
