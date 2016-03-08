@@ -1,4 +1,4 @@
-
+#!/usr/bin/env bash
 
 # Helper script to create browser-loadable versions of geojson-vt, pbf and vector-tile
 
