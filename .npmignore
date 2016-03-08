@@ -1,0 +1,6 @@
+node_modules
+vendor
+npm-debug.log
+.gobble-build
+gobblefile.js
+aux
