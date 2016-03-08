@@ -112,9 +112,14 @@ Layers² with no style specified will use the default `L.Path` options.
 `L.VectorGrid.Protobuf` requires `vector-tile` and `pbf`: the global variables `VectorTile` and `Pbf` must exist.
 
 
+## Developing
+
+Run `npm install`, then run the `aux/browserify-dependencies.sh` script. The dependencies do not provide browser-ready packages, see for example [mapbox/geojson-vt#52](https://github.com/mapbox/geojson-vt/pull/52).
+
 ## TODO
 
 * TopoJSON support
+* Tiled `<canvas>` renderer (`L.Canvas.Tile`, like the current `L.SVG.Tile`)
 
 
 ## Legalese
