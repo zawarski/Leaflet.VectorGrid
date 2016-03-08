@@ -54,8 +54,8 @@ In Leaflet, a "layer" is something that can be atomically added or removed from 
 
 A vector tile layer¹ can have several layers². In the `mapbox-streets-v6` vector tiles layer¹ above, there are named layers² like `admin`, `water` or `roads`.
 
-¹ In leaflet
-² Groups of themed features
+* ¹ In leaflet
+* ² Groups of themed features
 
 Styling is done via per-layer² sets of `L.Path` options in the `vectorTileLayerStyles` layer¹ option:
 
