@@ -20,8 +20,6 @@ L.VectorGrid = L.GridLayer.extend({
 
 				/// NOTE: THIS ASSUMES SQUARE TILES!!!!!1!
 				var pxPerExtent = this.getTileSize().x / layer.extent;
-				// 				var pxPerExtent = this.options.tileSize / layer.extent;
-
 
 				var layerStyle = this.options.vectorTileLayerStyles[ layerName ] ||
 				L.Path.prototype.options;

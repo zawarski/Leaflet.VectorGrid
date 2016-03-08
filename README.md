@@ -105,6 +105,29 @@ A layer² style can be either:
 Layers² with no style specified will use the default `L.Path` options.
 
 
+### SVG vs `<canvas>`
+
+Leaflet.VectorGrid is able to render vector tiles with both SVG and `<canvas>`, in the same way that vanilla Leaflet can use SVG and `<canvas>` to draw lines and polygons.
+
+To switch between the two, use the `rendererFactory` option for any `L.VectorGrid` layer, e.g.:
+
+```js
+var sliced = L.vectorGrid.slicer(geojson, {
+	rendererFactory: L.svg.tile,
+	attribution: 'Something',
+	vectorTileLayerStyles: { ... }
+});
+
+var pbf = L.vectorGrid.protobuf(url, {
+	rendererFactory: L.canvas.tile,
+	attribution: 'Something',
+	vectorTileLayerStyles: { ... }
+});
+```
+
+Internally, Leaflet.VectorGrid uses two classes named `L.SVG.Tile` and `L.Canvas.Tile`, with factory methods `L.svg.tile` and `L.canvas.tile` - a `L.VectorGrid` needs to be passed one of those factory methods.
+
+
 ## Dependencies
 
 `L.VectorGrid.Slicer` requires `geojson-vt`: the global variable `geojsonvt` must exist.
@@ -119,8 +142,9 @@ Run `npm install`, then run the `aux/browserify-dependencies.sh` script. The dep
 ## TODO
 
 * TopoJSON support
-* Tiled `<canvas>` renderer (`L.Canvas.Tile`, like the current `L.SVG.Tile`)
-
+* Sub-panes for the tile renderers (to set the "z-index" of layers/features)
+** More `<g>`roups in SVG
+** Offscreen `<canvas>`es in Canvas
 
 ## Legalese
 

@@ -16,6 +16,7 @@
 
 	<script type="text/javascript" src="../vendor/geojson-vt-dev.js"></script>
 	<script type="text/javascript" src="../src/Leaflet.Renderer.SVG.Tile.js"></script>
+	<script type="text/javascript" src="../src/Leaflet.Renderer.Canvas.Tile.js"></script>
 	<script type="text/javascript" src="../src/Leaflet.VectorGrid.js"></script>
 	<script type="text/javascript" src="../src/Leaflet.VectorGrid.Slicer.js"></script>
 
@@ -34,6 +35,7 @@
 
 
 		var vectorGrid = L.vectorGrid.slicer( euCountries, {
+			rendererFactory: L.canvas.tile,
 			vectorTileLayerStyles: {
 				sliced: function(properties, zoom) {
 					var p = properties.mapcolor7 % 5;
