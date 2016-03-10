@@ -1,8 +1,8 @@
 {
-  "name": "Leaflet.GridLayer.Vector",
-  "version": "0.0.0",
+  "name": "leaflet.vectorgrid",
+  "version": "0.1.0",
   "description": "Vector tile support for LeafletJS 1.0.",
-  "main": "src/Leaflet.GridLayer.Vector.js",
+  "main": "dist/Leaflet.VectorGrid.bundled.min.js",
   "dependencies": {},
   "devDependencies": {
     "geojson-vt": "^2.1.8",
@@ -12,6 +12,7 @@
     "gobble-uglifyjs": "^0.2.1",
     "leaflet": "leaflet/leaflet#master",
     "pbf": "^1.3.5",
+    "topojson": "^1.6.24",
     "vector-tile": "^1.2.0"
   },
   "scripts": {
@@ -21,7 +22,8 @@
   "keywords": [
     "leaflet",
     "vector",
-    "geojson"
+    "geojson",
+    "topojson"
   ],
   "author": "Iván Sánchez Ortega <ivan@sanchezortega.es>",
   "license": "Beerware"

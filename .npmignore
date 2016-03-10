@@ -4,3 +4,5 @@ npm-debug.log
 .gobble-build
 gobblefile.js
 aux
+.gobble
+.gobble-build

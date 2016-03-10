@@ -29,5 +29,7 @@ cp node_modules/pbf/dist/pbf-dev.js vendor/
 cp node_modules/vector-tile/dist/vector-tile-dev.js vendor/
 cp node_modules/leaflet/dist/leaflet* vendor/
 
+cp node_modules/topojson/build/topojson.js vendor/
+
 
 

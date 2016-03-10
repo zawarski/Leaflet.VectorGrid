@@ -11,7 +11,6 @@
 
 	<script type="text/javascript" src="./eu-countries.js"></script>
 
-
 </head>
 <body style='margin:0'>
 	<div id="map" style="width: 100vw; height: 100vh"></div>
@@ -29,31 +28,39 @@
 		}).addTo(map);
 
 
+		fetch('./eu-countries.topo.json').then(function(response){
+			return response.json();
+		}).then(function(json){
 
-		var vectorGrid = L.vectorGrid.slicer( euCountries, {
-			rendererFactory: L.canvas.tile,
-			vectorTileLayerStyles: {
-				sliced: function(properties, zoom) {
-					var p = properties.mapcolor7 % 5;
-					return {
-						fillColor: p === 0 ? '#800026' :
-								p === 1 ? '#E31A1C' :
-								p === 2 ? '#FEB24C' :
-								p === 3 ? '#B2FE4C' : '#FFEDA0',
-						fillOpacity: 0.5,
-	// 					fillOpacity: 1,
-						stroke: true,
-						fill: true,
-						color: 'black',
-// 							opacity: 0.2,
-						weight: 0,
+			console.log(json);
+
+			var vectorGrid = L.vectorGrid.slicer( json, {
+				rendererFactory: L.canvas.tile,
+				vectorTileLayerStyles: {
+					'eu-countries': function(properties, zoom) {
+					console.log(properties);
+						var p = properties.mapcolor7 % 5;
+						return {
+							fillColor: p === 0 ? '#800026' :
+									p === 1 ? '#E31A1C' :
+									p === 2 ? '#FEB24C' :
+									p === 3 ? '#B2FE4C' : '#FFEDA0',
+							fillOpacity: 0.5,
+		// 					fillOpacity: 1,
+							stroke: true,
+							fill: true,
+							color: 'black',
+	// 							opacity: 0.2,
+							weight: 2,
+						}
 					}
 				}
-			}
 
-		}).addTo(map);
+			}).addTo(map);
 
-		map.setView({ lat: 47.040182144806664, lng: 9.667968750000002 }, 0);
+			map.setView({ lat: 47.040182144806664, lng: 9.667968750000002 }, 0);
+
+		});
 
 
 	</script>

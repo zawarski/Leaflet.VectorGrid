@@ -3,3 +3,5 @@ vendor
 npm-debug.log
 .gobble-build
 dist
+.gobble
+.gobble-build

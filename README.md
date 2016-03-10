@@ -19,6 +19,17 @@ With sliced GeoJSON: http://ivansanchez.github.io/Leaflet.VectorGrid/demo/demo-g
 With protobuf `VectorTile`s: http://ivansanchez.github.io/Leaflet.VectorGrid/demo/demo-vectortiles.html
 
 
+## Using
+
+Install through `npm` with `npm install leaflet.vectorgrid`.
+
+This will make available some browser-ready files, which include the bundled dependencies:
+
+* [geojson-vt](https://github.com/mapbox/geojson-vt) (Under ISC license)
+* [pbf](https://github.com/mapbox/pbf) (Under BSD license)
+* [topojson](https://github.com/mbostock/topojson) (Under BSD license)
+* [vector-tile](https://github.com/mapbox/vector-tile-js) (Under BSD license)
+
 ## Docs
 
 This plugin exposes two new classes:
@@ -34,6 +45,15 @@ var layer = L.vectorGrid.slicer(geojson, options);
 ```
 
 Any options to `geojson-vt` can be passed in `options`.
+
+Styling-wise, this will create an internal vector tile layer named `sliced`. This can be overridden with the `vectorTileLayerName` option.
+
+The slicer also accepts [TopoJSON](https://github.com/mbostock/topojson) transparently:
+```js
+var layer = L.vectorGrid.slicer(topojson, options);
+```
+
+The TopoJSON format [implicitly groups features into "objects"](https://github.com/mbostock/topojson-specification/blob/master/README.md#215-objects). These will be transformed into vector tile layer names when styling (the `vectorTileLayerName` option is ignored when using TopoJSON).
 
 ### `L.VectorGrid.Protobuf`
 
@@ -130,10 +150,9 @@ Internally, Leaflet.VectorGrid uses two classes named `L.SVG.Tile` and `L.Canvas
 
 ## Dependencies
 
-`L.VectorGrid.Slicer` requires `geojson-vt`: the global variable `geojsonvt` must exist.
+`L.VectorGrid.Slicer` requires `geojson-vt`: the global variable `geojsonvt` must exist. If topojson data is used, then the `topojson` global variable must also exist.
 
 `L.VectorGrid.Protobuf` requires `vector-tile` and `pbf`: the global variables `VectorTile` and `Pbf` must exist.
-
 
 ## Developing
 

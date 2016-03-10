@@ -13,45 +13,61 @@ L.VectorGrid.Slicer = L.VectorGrid.extend({
 	initialize: function(geojson, options) {
 		L.VectorGrid.prototype.initialize.call(this, options);
 
-		// Inherits available options from geojson-vt!
-		this._slicer = geojsonvt(geojson, this.options);
+
+		this._slicers = {};
+		if (geojson.type && geojson.type === 'Topology') {
+			// geojson is really a topojson
+			for (var layerName in geojson.objects) {
+				this._slicers[layerName] = geojsonvt(
+					topojson.feature(geojson, geojson.objects[layerName])
+				, this.options);
+			}
+		} else {
+			// For a geojson, create just one vectortilelayer named with the value
+			// of the option.
+			// Inherits available options from geojson-vt!
+			this._slicers[options.vectorTileLayerName] = geojsonvt(geojson, this.options);
+		}
+
 	},
 
 	_getVectorTilePromise: function(coords) {
-		var slicedTile = this._slicer.getTile(coords.z, coords.x, coords.y);
 
-		if (!slicedTile) { return new Promise(function(resolve){ return resolve({ layers: [] }); }); }
+		var tileLayers = {};
 
-		var vectorTileLayer = {
-			features: [],
-			extent: this.options.extent,
-			name: this.options.vectorTileLayerName,
-			length: slicedTile.features.length
-		}
+		for (var layerName in this._slicers) {
+			var slicer = this._slicers[layerName];
+			var slicedTileLayer = slicer.getTile(coords.z, coords.x, coords.y);
 
-		for (var i in slicedTile.features) {
-			var feat = {
-				geometry: slicedTile.features[i].geometry,
-				properties: slicedTile.features[i].tags,
-				type: slicedTile.features[i].type	// 1 = point, 2 = line, 3 = polygon
+			if (slicedTileLayer) {
+				var vectorTileLayer = {
+					features: [],
+					extent: this.options.extent,
+					name: this.options.vectorTileLayerName,
+					length: slicedTileLayer.features.length
+				}
+
+				for (var i in slicedTileLayer.features) {
+					var feat = {
+						geometry: slicedTileLayer.features[i].geometry,
+						properties: slicedTileLayer.features[i].tags,
+						type: slicedTileLayer.features[i].type	// 1 = point, 2 = line, 3 = polygon
+					}
+					vectorTileLayer.features.push(feat);
+				}
+
+				tileLayers[layerName] = vectorTileLayer;
 			}
-			vectorTileLayer.features.push(feat);
+
 		}
 
-		// Normalize a layer name so this looks more like a binary VectorTile
-		var layers = {};
-		layers[this.options.vectorTileLayerName] = vectorTileLayer;
-
-		return new Promise(function(resolve){ return resolve({ layers: layers })});
+		return new Promise(function(resolve){ return resolve({ layers: tileLayers })});
 	},
-
+	
 });
-
 
 
 L.vectorGrid.slicer = function (geojson, options) {
 	return new L.VectorGrid.Slicer(geojson, options);
 };
-
-
 
