@@ -8,7 +8,7 @@
     "geojson-vt": "^2.1.8",
     "gobble": "^0.10.2",
     "gobble-cli": "^0.6.0",
-    "gobble-concat": "^0.4.0",
+    "gobble-concat": "git+https://github.com/IvanSanchez/gobble-concat.git#3c89b300d11d6764ce7e4e1fa43d124571997d98",
     "gobble-uglifyjs": "^0.2.1",
     "leaflet": "leaflet/leaflet#master",
     "pbf": "^1.3.5",
