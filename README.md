@@ -162,10 +162,11 @@ Run `npm install`, then run the `aux/browserify-dependencies.sh` script. The dep
 
 ## TODO
 
-* TopoJSON support
 * Sub-panes for the tile renderers (to set the "z-index" of layers/features)
 ** More `<g>`roups in SVG
 ** Offscreen `<canvas>`es in Canvas
+* `getBounds()` support for the slicer (inherit/extrapolate from geojson data)
+* Symbolize points somehow
 
 ## Legalese
 
