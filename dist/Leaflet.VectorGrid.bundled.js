@@ -2684,7 +2684,7 @@ L.VectorGrid.Slicer = L.VectorGrid.extend({
 			// For a geojson, create just one vectortilelayer named with the value
 			// of the option.
 			// Inherits available options from geojson-vt!
-			this._slicers[options.vectorTileLayerName] = geojsonvt(geojson, this.options);
+			this._slicers[this.options.vectorTileLayerName] = geojsonvt(geojson, this.options);
 		}
 
 	},
@@ -2721,7 +2721,7 @@ L.VectorGrid.Slicer = L.VectorGrid.extend({
 
 		return new Promise(function(resolve){ return resolve({ layers: tileLayers })});
 	},
-	
+
 });
 
 
