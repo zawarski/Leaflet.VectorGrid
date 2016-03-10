@@ -1,6 +1,5 @@
 node_modules
 npm-debug.log
-.gobble-build
-dist
 .gobble
 .gobble-build
+_site
