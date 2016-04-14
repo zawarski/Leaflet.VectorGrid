@@ -13,7 +13,7 @@ L.VectorGrid = L.GridLayer.extend({
 		var vectorTilePromise = this._getVectorTilePromise(coords);
 
 
-		vectorTilePromise.then( function(vectorTile) {
+		vectorTilePromise.then( function renderTile(vectorTile) {
 
 			for (var layerName in vectorTile.layers) {
 				var layer = vectorTile.layers[layerName];
@@ -26,43 +26,52 @@ L.VectorGrid = L.GridLayer.extend({
 
 				for (var i in layer.features) {
 					var feat = layer.features[i];
-					this._mkFeatureParts(feat, pxPerExtent);
 
-					/// Style can be a callback that is passed the feature's
-					/// properties and tile zoom level...
-					var styleOptions = (layerStyle instanceof Function) ?
-					layerStyle(feat.properties, coords.z) :
-					layerStyle;
+					if (feat.type > 1) { // Lines, polygons
 
-					if (!(styleOptions instanceof Array)) {
-						styleOptions = [styleOptions];
-					}
+						this._mkFeatureParts(feat, pxPerExtent);
 
-					/// Style can be an array of styles, for styling a feature
-					/// more than once...
-					for (var j in styleOptions) {
-						var style = L.extend({}, L.Path.prototype.options, styleOptions[j]);
+						/// Style can be a callback that is passed the feature's
+						/// properties and tile zoom level...
+						var styleOptions = (layerStyle instanceof Function) ?
+						layerStyle(feat.properties, coords.z) :
+						layerStyle;
 
-						if (feat.type === 1) { // Points
-							style.fill = false;
-						} else if (feat.type === 2) {	// Polyline
-							style.fill = false;
+						if (!(styleOptions instanceof Array)) {
+							styleOptions = [styleOptions];
 						}
 
-						feat.options = style;
-						renderer._initPath( feat );
-						renderer._updateStyle( feat );
+						/// Style can be an array of styles, for styling a feature
+						/// more than once...
+						for (var j in styleOptions) {
+							var style = L.extend({}, L.Path.prototype.options, styleOptions[j]);
 
-						if (feat.type === 1) { // Points
-							// 							style.fill = false;
-						} else if (feat.type === 2) {	// Polyline
-							style.fill = false;
-							renderer._updatePoly(feat, false);
-						} else if (feat.type === 3) {	// Polygon
-							renderer._updatePoly(feat, true);
+							if (feat.type === 1) { // Points
+								style.fill = false;
+							} else if (feat.type === 2) {	// Polyline
+								style.fill = false;
+							}
+
+							feat.options = style;
+							renderer._initPath( feat );
+							renderer._updateStyle( feat );
+
+							if (feat.type === 1) { // Points
+								// 							style.fill = false;
+							} else if (feat.type === 2) {	// Polyline
+								style.fill = false;
+								renderer._updatePoly(feat, false);
+							} else if (feat.type === 3) {	// Polygon
+								renderer._updatePoly(feat, true);
+							}
+
+							renderer._addPath( feat );
 						}
 
-						renderer._addPath( feat );
+					} else {
+						// Feat is a point (type === 1)
+
+						/// FIXME!!!
 					}
 				}
 

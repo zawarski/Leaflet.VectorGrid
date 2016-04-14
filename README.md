@@ -115,6 +115,9 @@ var vectorTileOptions = {
 	}
 };
 
+At this time, only polylines and polygons can be styled. There is no support (yet) for symbolizing points.
+
+
 var pbfLayer = L.vectorGrid.protobuf(url, vectorTileOptions).addTo(map);
 ```
 

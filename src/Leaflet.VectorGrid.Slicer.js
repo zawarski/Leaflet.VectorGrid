@@ -7,7 +7,8 @@ L.VectorGrid.Slicer = L.VectorGrid.extend({
 
 	options: {
 		vectorTileLayerName: 'sliced',
-		extent: 4096	// Default for geojson-vt
+		extent: 4096,	// Default for geojson-vt
+		maxZoom: 14  	// Default for geojson-vt
 	},
 
 	initialize: function(geojson, options) {
@@ -21,6 +22,7 @@ L.VectorGrid.Slicer = L.VectorGrid.extend({
 				this._slicers[layerName] = geojsonvt(
 					topojson.feature(geojson, geojson.objects[layerName])
 				, this.options);
+// 				console.log('topojson layer:', layerName);
 			}
 		} else {
 			// For a geojson, create just one vectortilelayer named with the value
@@ -38,6 +40,8 @@ L.VectorGrid.Slicer = L.VectorGrid.extend({
 		for (var layerName in this._slicers) {
 			var slicer = this._slicers[layerName];
 			var slicedTileLayer = slicer.getTile(coords.z, coords.x, coords.y);
+
+// 			console.log(coords, slicedTileLayer && slicedTileLayer.features && slicedTileLayer.features.length || 0);
 
 			if (slicedTileLayer) {
 				var vectorTileLayer = {
