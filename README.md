@@ -32,6 +32,8 @@ This will make available some browser-ready files, which include the bundled dep
 * [topojson](https://github.com/mbostock/topojson) (Under BSD license)
 * [vector-tile](https://github.com/mapbox/vector-tile-js) (Under BSD license)
 
+Use the file `dist/Leaflet.VectorGrid.js` if you are adding these dependencies yourself, or `dist/Leaflet.VectorGrid.bundled.js` for minimal fuss.
+
 ## Docs
 
 This plugin exposes two new classes:
