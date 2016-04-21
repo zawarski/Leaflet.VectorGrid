@@ -3,7 +3,7 @@
 # Leaflet.VectorGrid
 
 
-Display gridded vector data (sliced GeoJSON or protobuf vector tiles) in Leaflet 1.0.0
+Display gridded vector data (sliced [GeoJSON](http://geojson.org/), [TopoJSON](https://github.com/mbostock/topojson/wiki) or [protobuf vector tiles](https://github.com/mapbox/vector-tile-spec)) in [Leaflet](http://www.leafletjs.com) 1.0.0
 
 
 

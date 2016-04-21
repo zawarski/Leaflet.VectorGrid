@@ -1,7 +1,7 @@
 {
   "name": "leaflet.vectorgrid",
   "version": "0.1.2",
-  "description": "Vector tile support for LeafletJS 1.0.",
+  "description": "Display gridded vector data (sliced GeoJSON or protobuf vector tiles) in Leaflet 1.0.0",
   "main": "dist/Leaflet.VectorGrid.bundled.min.js",
   "dependencies": {},
   "devDependencies": {
