@@ -1,23 +1,23 @@
 {
   "name": "leaflet.vectorgrid",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "Display gridded vector data (sliced GeoJSON or protobuf vector tiles) in Leaflet 1.0.0",
   "main": "dist/Leaflet.VectorGrid.bundled.min.js",
-  "dependencies": {},
-  "devDependencies": {
+  "dependencies": {
     "geojson-vt": "^2.1.8",
-    "gobble": "^0.10.2",
-    "gobble-cli": "^0.6.0",
-    "gobble-concat": "git+https://github.com/IvanSanchez/gobble-concat.git#3c89b300d11d6764ce7e4e1fa43d124571997d98",
-    "gobble-uglifyjs": "^0.2.1",
-    "leaflet": "leaflet/leaflet#master",
+    "gobble-cli": "^0.7.0",
+    "leaflet": "^1.0.0-rc.1",
     "pbf": "^1.3.5",
-    "topojson": "^1.6.24",
-    "vector-tile": "^1.2.0"
+    "topojson": "^1.6.26",
+    "vector-tile": "^1.2.0",
+    "gobble-buble": "^0.7.0",
+    "gobble-concat": "git+https://github.com/gobblejs/gobble-concat.git#fbe0eb5578785f7b209947bdfac912ca5354d0ff",
+    "gobble-uglifyjs": "^0.2.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish": "node_modules/.bin/gobble build -f dist/"
+    "prepublish": "node_modules/.bin/gobble build -f dist/",
+    "start": "node_modules/.bin/gobble"
   },
   "keywords": [
     "leaflet",
@@ -26,5 +26,15 @@
     "topojson"
   ],
   "author": "Iván Sánchez Ortega <ivan@sanchezortega.es>",
-  "license": "Beerware"
+  "license": "Beerware",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IvanSanchez/Leaflet.VectorGrid.git"
+  },
+  "bugs": {
+    "url": "https://github.com/IvanSanchez/Leaflet.VectorGrid/issues"
+  },
+  "devDependencies": {
+    "gobble-include": "^0.3.1"
+  }
 }

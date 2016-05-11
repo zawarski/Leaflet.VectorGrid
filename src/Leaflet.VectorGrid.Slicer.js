@@ -1,8 +1,5 @@
 
 
-
-// geojson-vt powered!
-// NOTE: Assumes the global `geojsonvt` exists!!!
 L.VectorGrid.Slicer = L.VectorGrid.extend({
 
 	options: {
@@ -14,58 +11,102 @@ L.VectorGrid.Slicer = L.VectorGrid.extend({
 	initialize: function(geojson, options) {
 		L.VectorGrid.prototype.initialize.call(this, options);
 
+		// Slice the geojson/topojson via a web worker
+		var workerCode = `
+			include('geojson-vt-dev.js')
+			include('topojson.js')
 
-		this._slicers = {};
-		if (geojson.type && geojson.type === 'Topology') {
-			// geojson is really a topojson
-			for (var layerName in geojson.objects) {
-				this._slicers[layerName] = geojsonvt(
-					topojson.feature(geojson, geojson.objects[layerName])
-				, this.options);
-// 				console.log('topojson layer:', layerName);
+			var slicers = {};
+			var options;
+
+			onmessage = function (e) {
+				if (e.data[0] === 'slice') {
+					// Given a blob of GeoJSON and some topojson/geojson-vt options, do the slicing.
+					var geojson = e.data[1];
+					options     = e.data[2];
+
+					if (geojson.type && geojson.type === 'Topology') {
+						for (var layerName in geojson.objects) {
+							slicers[layerName] = self.geojsonvt(
+								self.topojson.feature(geojson, geojson.objects[layerName])
+							, options);
+						}
+					} else {
+						slicers[options.vectorTileLayerName] = self.geojsonvt(geojson, options);
+					}
+
+				} else if (e.data[0] === 'get') {
+					// Gets the vector tile for the given coordinates, sends it back as a message
+					var coords = e.data[1];
+
+					var tileLayers = {};
+					for (var layerName in slicers) {
+						var slicedTileLayer = slicers[layerName].getTile(coords.z, coords.x, coords.y);
+
+						if (slicedTileLayer) {
+							var vectorTileLayer = {
+								features: [],
+								extent: options.extent,
+								name: options.vectorTileLayerName,
+								length: slicedTileLayer.features.length
+							}
+
+							for (var i in slicedTileLayer.features) {
+								var feat = {
+									geometry: slicedTileLayer.features[i].geometry,
+									properties: slicedTileLayer.features[i].tags,
+									type: slicedTileLayer.features[i].type	// 1 = point, 2 = line, 3 = polygon
+								}
+								vectorTileLayer.features.push(feat);
+							}
+							tileLayers[layerName] = vectorTileLayer;
+						}
+					}
+					postMessage({ layers: tileLayers, coords: coords });
+				}
 			}
-		} else {
-			// For a geojson, create just one vectortilelayer named with the value
-			// of the option.
-			// Inherits available options from geojson-vt!
-			this._slicers[this.options.vectorTileLayerName] = geojsonvt(geojson, this.options);
+		`;
+
+		// Create a shallow copy of this.options, excluding things that might
+		// be functions - we only care about topojson/geojsonvt options
+		var options = {};
+		for (var i in this.options) {
+			if (i !== 'rendererFactory' &&
+				i !== 'vectorTileLayerStyles' &&
+				typeof (this.options[i] !== 'function')
+			) {
+				options[i] = this.options[i];
+			}
 		}
+
+		this._worker = new Worker(window.URL.createObjectURL(new Blob([workerCode])));
+
+		// Send initial data to worker.
+		this._worker.postMessage(['slice', geojson, options]);
 
 	},
 
+
 	_getVectorTilePromise: function(coords) {
 
-		var tileLayers = {};
+		var _this = this;
 
-		for (var layerName in this._slicers) {
-			var slicer = this._slicers[layerName];
-			var slicedTileLayer = slicer.getTile(coords.z, coords.x, coords.y);
+		var p = new Promise( function waitForWorker(res) {
+			_this._worker.addEventListener('message', function recv(m) {
+				if (m.data.coords &&
+				    m.data.coords.x === coords.x &&
+				    m.data.coords.y === coords.y &&
+				    m.data.coords.z === coords.z ) {
 
-// 			console.log(coords, slicedTileLayer && slicedTileLayer.features && slicedTileLayer.features.length || 0);
-
-			if (slicedTileLayer) {
-				var vectorTileLayer = {
-					features: [],
-					extent: this.options.extent,
-					name: this.options.vectorTileLayerName,
-					length: slicedTileLayer.features.length
+					res(m.data);
+					_this._worker.removeEventListener('message', recv);
 				}
+			});
+		});
 
-				for (var i in slicedTileLayer.features) {
-					var feat = {
-						geometry: slicedTileLayer.features[i].geometry,
-						properties: slicedTileLayer.features[i].tags,
-						type: slicedTileLayer.features[i].type	// 1 = point, 2 = line, 3 = polygon
-					}
-					vectorTileLayer.features.push(feat);
-				}
+		this._worker.postMessage(['get', coords]);
 
-				tileLayers[layerName] = vectorTileLayer;
-			}
-
-		}
-
-		return new Promise(function(resolve){ return resolve({ layers: tileLayers })});
+		return p;
 	},
 
 });

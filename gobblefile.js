@@ -1,8 +1,21 @@
 
 
 var gobble = require('gobble');
+var src = gobble('src');
+var vendor = gobble('vendor');
 
-var concatenatedJs = gobble('src').transform('concat', {
+
+// The web worker code requires some libraries embedded into a text string...
+var workerDeps = gobble([
+	vendor.include('geojson-vt-dev.js'),
+	vendor.include('topojson.js')
+]) //.transform('uglifyjs', { ext: '.min.js', sourceMap: false });
+
+
+var concatenatedJs = gobble([src, workerDeps])
+.transform('include')
+.transform('buble')
+.transform('concat', {
 	dest: 'Leaflet.VectorGrid.js',
 	files: [
 		'Leaflet.Renderer.SVG.Tile.js',
@@ -10,17 +23,17 @@ var concatenatedJs = gobble('src').transform('concat', {
 		'Leaflet.VectorGrid.js',
 		'Leaflet.VectorGrid.Slicer.js',
 		'Leaflet.VectorGrid.Protobuf.js'
-	]
+	],
+	writeSourcemap: true
 });
 
-var vendor = gobble('vendor');
 
 var bundled = gobble([ vendor, concatenatedJs ]).transform('concat', {
 	dest: 'Leaflet.VectorGrid.bundled.js',
 	files: [
-		'geojson-vt-dev.js',
+// 		'geojson-vt-dev.js',
 		'pbf-dev.js',
-		'topojson.js',
+// 		'topojson.js',
 		'vector-tile-dev.js',
 		'Leaflet.VectorGrid.js'
 	],
@@ -43,4 +56,3 @@ module.exports = gobble([
 	demo,
 	leaflet
 ]);
-
