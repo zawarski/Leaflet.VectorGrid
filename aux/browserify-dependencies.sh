@@ -20,7 +20,7 @@ cd -
 
 cd node_modules/leaflet/
 npm install
-jake build
+npm run build
 cd -
 
 mkdir -p vendor
