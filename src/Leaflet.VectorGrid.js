@@ -76,7 +76,7 @@ L.VectorGrid = L.GridLayer.extend({
 				}
 
 			}
-			L.Util.requestAnimFrame(done);
+			L.Util.requestAnimFrame(done.bind(coords, null, null));
 		}.bind(this));
 
 		return renderer.getContainer();
