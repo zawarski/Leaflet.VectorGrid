@@ -23,16 +23,31 @@ With protobuf `VectorTile`s: http://ivansanchez.github.io/Leaflet.VectorGrid/dis
 
 ## Using
 
-Install through `npm` with `npm install leaflet.vectorgrid`.
+If you use `npm`:
+```
+	npm install leaflet.vectorgrid
+```
 
-This will make available some browser-ready files, which include the bundled dependencies:
+That will make available two files: `dist/Leaflet.VectorGrid.js` and `dist/Leaflet.VectorGrid.bundled.js`.
+
+The difference is that `dist/Leaflet.VectorGrid.bundled.js` includes all of `VectorGrid`'s dependencies:
 
 * [geojson-vt](https://github.com/mapbox/geojson-vt) (Under ISC license)
 * [pbf](https://github.com/mapbox/pbf) (Under BSD license)
 * [topojson](https://github.com/mbostock/topojson) (Under BSD license)
 * [vector-tile](https://github.com/mapbox/vector-tile-js) (Under BSD license)
 
-Use the file `dist/Leaflet.VectorGrid.js` if you are adding these dependencies yourself, or `dist/Leaflet.VectorGrid.bundled.js` for minimal fuss.
+ If you are adding these dependencies by yourself, use `dist/Leaflet.VectorGrid.js` instead.
+
+If you don't want to deal with `npm` and local files, you can use `unpkg.com` instead:
+
+```
+<script src="https://unpkg.com/leaflet.vectorgrid@latest/dist/Leaflet.VectorGrid.bundled.js"></script>
+```
+or, with the same caveats about bundled dependencies:
+```
+<script src="https://unpkg.com/leaflet.vectorgrid@latest/dist/Leaflet.VectorGrid.js"></script>
+```
 
 ## Docs
 
