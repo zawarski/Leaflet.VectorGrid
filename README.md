@@ -14,11 +14,11 @@ Because neither Leaflet.MapboxVectorTile nor Hoverboard will work on Leaflet 1.
 
 ## Demo
 
-With sliced GeoJSON: http://ivansanchez.github.io/Leaflet.VectorGrid/dist/demo/demo-geojson.html
+With sliced GeoJSON: http://leaflet.github.io/Leaflet.VectorGrid/dist/demo/demo-geojson.html
 
-With sliced TopoJSON: http://ivansanchez.github.io/Leaflet.VectorGrid/dist/demo/demo-topojson.html (sorry for the antimeridian mess, topojson-to-geojson seems to not handle it properly)
+With sliced TopoJSON: http://leaflet.github.io/Leaflet.VectorGrid/dist/demo/demo-topojson.html (sorry for the antimeridian mess, topojson-to-geojson seems to not handle it properly)
 
-With protobuf `VectorTile`s: http://ivansanchez.github.io/Leaflet.VectorGrid/dist/demo/demo-vectortiles.html
+With protobuf `VectorTile`s: http://leaflet.github.io/Leaflet.VectorGrid/dist/demo/demo-vectortiles.html
 
 
 ## Using
