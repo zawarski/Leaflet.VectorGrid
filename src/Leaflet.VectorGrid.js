@@ -50,9 +50,6 @@ L.VectorGrid = L.GridLayer.extend({
 							style.fill = false;
 						}
 
-						if (this.options.interactive) {
-							this._makeInteractive(feat);
-						}
 
 						feat.options = style;
 						renderer._initPath( feat );
@@ -65,6 +62,10 @@ L.VectorGrid = L.GridLayer.extend({
 							renderer._updatePoly(feat, false);
 						} else if (feat.type === 3) {	// Polygon
 							renderer._updatePoly(feat, true);
+						}
+
+						if (this.options.interactive) {
+							this._makeInteractive(feat);
 						}
 
 						renderer._addPath( feat );
@@ -124,11 +125,11 @@ L.VectorGrid = L.GridLayer.extend({
 		switch (feat.type) {
 		case 1: // Point
 			feat._containsPoint = L.CircleMarker.prototype._containsPoint;
-			var r = this._radius,
-			    r2 = this._radiusY || r,
-			    w = this._clickTolerance(),
+			var r = feat._radius,
+			    r2 = feat._radiusY || r,
+			    w = feat._clickTolerance(),
 			    p = [r + w, r2 + w];
-			this._pxBounds = new L.Bounds(this._point.subtract(p), this._point.add(p));
+			feat._pxBounds = new L.Bounds(feat._point.subtract(p), feat._point.add(p));
 			break;
 		case 2: // Polyline
 			feat._containsPoint = L.Polyline.prototype._containsPoint;
