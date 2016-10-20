@@ -2,14 +2,20 @@
 
 L.SVG.Tile = L.SVG.extend({
 
-	initialize: function (tileSize, options) {
+	initialize: function (map, tileCoord, tileSize, options) {
 		L.SVG.prototype.initialize.call(this, options);
+		this._map = map;
 		this._size = tileSize;
 
 		this._initContainer();
 		this._container.setAttribute('width', this._size.x);
 		this._container.setAttribute('height', this._size.y);
 		this._container.setAttribute('viewBox', [0, 0, this._size.x, this._size.y].join(' '));
+
+		if (options.interactive) {
+			// By default, Leaflet tiles do not have pointer events
+		    this._container.style.pointerEvents = 'auto';
+		}
 	},
 
 	getContainer: function() {
@@ -38,12 +44,15 @@ L.SVG.Tile = L.SVG.extend({
 
 	_addPath: function (layer) {
 		this._rootGroup.appendChild(layer._path);
+		if (this.options.interactive) {
+			this._map._targets[L.stamp(layer._path)] = layer;
+		}
 	},
 
 });
 
 
-L.svg.tile = function(tileSize, opts){
-	return new L.SVG.Tile(tileSize, opts);
+L.svg.tile = function(map, tileCoord, tileSize, opts){
+	return new L.SVG.Tile(map, tileCoord, tileSize, opts);
 }
 
