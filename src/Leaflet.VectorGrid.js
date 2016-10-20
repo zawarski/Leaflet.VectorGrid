@@ -124,14 +124,33 @@ L.VectorGrid = L.GridLayer.extend({
 		switch (feat.type) {
 		case 1: // Point
 			feat._containsPoint = L.CircleMarker.prototype._containsPoint;
+			var r = this._radius,
+			    r2 = this._radiusY || r,
+			    w = this._clickTolerance(),
+			    p = [r + w, r2 + w];
+			this._pxBounds = new L.Bounds(this._point.subtract(p), this._point.add(p));
 			break;
 		case 2: // Polyline
 			feat._containsPoint = L.Polyline.prototype._containsPoint;
+			feat._pxBounds = this._getPixelBounds(feat._parts);
 			break;
 		case 3: // Polygon
 			feat._containsPoint = L.Polygon.prototype._containsPoint;
+			feat._pxBounds = this._getPixelBounds(feat._parts);
 			break;
 		}
+	},
+
+	_getPixelBounds: function(parts) {
+		var bounds = L.bounds([]);
+		for (var i = 0; i < parts.length; i++) {
+			var part = parts[i];
+			for (var j = 0; j < part.length; j++) {
+				bounds.extend(part[j]);
+			}
+		}
+
+		return bounds;
 	}
 });
 
