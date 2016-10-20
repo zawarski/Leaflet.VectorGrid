@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Leaflet Map Panes Example</title>
+	<title>Leaflet.VectorGrid Points Example</title>
 	<meta charset="utf-8" />
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -70,17 +70,22 @@
 				building: [],
 				road_label: [],
 				housenum_label: [],
-
 			},
+			interactive: true
 		};
 
 		L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-		var pbfLayer = L.vectorGrid.protobuf(url, vectorTileOptions).addTo(map);
+		var pbfLayer = L.vectorGrid.protobuf(url, vectorTileOptions)
+			.on('click', function(e) {
+				L.popup()
+					.setContent(e.layer.properties.name || e.layer.properties.type)
+					.setLatLng(e.latlng)
+					.openOn(map);
+			})
+			.addTo(map);
 
 		map.setView([40.9994639, -74.163208], 15);
-
-
 	</script>
 </body>
 </html>

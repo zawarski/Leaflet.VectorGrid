@@ -4,11 +4,13 @@ L.VectorGrid = L.GridLayer.extend({
 
 	options: {
 		rendererFactory: L.svg.tile,
-		vectorTileLayerStyles: {}
+		vectorTileLayerStyles: {},
+		interactive: false,
 	},
 
 	createTile: function(coords, done) {
-		var renderer = this.options.rendererFactory(this.getTileSize(), this.options);
+		var tileSize = this.getTileSize();
+		var renderer = this.options.rendererFactory(this._map, coords, tileSize, this.options);
 
 		var vectorTilePromise = this._getVectorTilePromise(coords);
 
@@ -48,6 +50,10 @@ L.VectorGrid = L.GridLayer.extend({
 							style.fill = false;
 						}
 
+						if (this.options.interactive) {
+							this._makeInteractive(feat);
+						}
+
 						feat.options = style;
 						renderer._initPath( feat );
 						renderer._updateStyle( feat );
@@ -56,7 +62,6 @@ L.VectorGrid = L.GridLayer.extend({
 							feat._radius = style.radius,
 							renderer._updateCircle( feat );
 						} else if (feat.type === 2) {	// Polyline
-							style.fill = false;
 							renderer._updatePoly(feat, false);
 						} else if (feat.type === 3) {	// Polygon
 							renderer._updatePoly(feat, true);
@@ -111,6 +116,23 @@ L.VectorGrid = L.GridLayer.extend({
 		}
 	},
 
+	_makeInteractive: function(feat) {
+		feat._clickTolerance = L.Path.prototype._clickTolerance;
+		L.extend(feat, L.Evented.prototype);
+		feat.addEventParent(this);
+
+		switch (feat.type) {
+		case 1: // Point
+			feat._containsPoint = L.CircleMarker.prototype._containsPoint;
+			break;
+		case 2: // Polyline
+			feat._containsPoint = L.Polyline.prototype._containsPoint;
+			break;
+		case 3: // Polygon
+			feat._containsPoint = L.Polygon.prototype._containsPoint;
+			break;
+		}
+	}
 });
 
 
