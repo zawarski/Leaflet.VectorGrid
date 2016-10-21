@@ -241,16 +241,17 @@ L.VectorGrid = L.GridLayer.extend({
 			break;
 		case 2: // Polyline
 			feat._containsPoint = L.Polyline.prototype._containsPoint;
-			feat._pxBounds = this._getPixelBounds(feat._parts);
+			feat._pxBounds = this._getPixelBounds(feat);
 			break;
 		case 3: // Polygon
 			feat._containsPoint = L.Polygon.prototype._containsPoint;
-			feat._pxBounds = this._getPixelBounds(feat._parts);
+			feat._pxBounds = this._getPixelBounds(feat);
 			break;
 		}
 	},
 
-	_getPixelBounds: function(parts) {
+	_getPixelBounds: function(layer) {
+		var parts = layer._parts;
 		var bounds = L.bounds([]);
 		for (var i = 0; i < parts.length; i++) {
 			var part = parts[i];
@@ -258,6 +259,12 @@ L.VectorGrid = L.GridLayer.extend({
 				bounds.extend(part[j]);
 			}
 		}
+
+		var w = layer._clickTolerance(),
+		    p = new L.Point(w, w);
+
+		bounds.min._subtract(p);
+		bounds.max._add(p);
 
 		return bounds;
 	}
