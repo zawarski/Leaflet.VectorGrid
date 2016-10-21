@@ -132,7 +132,7 @@ var vectorTileOptions = {
 	}
 };
 
-At this time, only polylines and polygons can be styled. There is no support (yet) for symbolizing points.
+Polylines and polygons can be styled exactly like normal Leaflet overlays, points can be styled like CircleMarkers.
 
 
 var pbfLayer = L.vectorGrid.protobuf(url, vectorTileOptions).addTo(map);
@@ -146,6 +146,42 @@ A layer² style can be either:
 
 Layers² with no style specified will use the default `L.Path` options.
 
+#### Updating styles
+
+In some cases it can be desirable to change the style of a feature on screen, for example for highlighting when a feature is clicked.
+
+To do this, VectorGrid needs to know how to identify a feature. This is done through the `getFeatureId` option, which should be set to a function
+that returns an id given a feature as argument. For example:
+
+```js
+var vectorGrid = L.vectorGrid.slicer(url, {
+	...
+	getFeatureId: function(f) {
+		return f.properties.osm_id;
+	}
+}
+```
+
+Note that features with the same id will be treated as one when changing style, this happens normally when for example a polygon spans more than one tile.
+
+To update the style of a feature, use `setFeatureStyle`:
+
+```js
+vectorGrid.setFeatureStyle(id, style);
+```
+
+The styling follows the same rules as described above, it accepts a single style, an array, or a function that returns styling.
+
+To revert the style to the layer's default, use the `resetFeatureStyle` method:
+
+```js
+vectorGrid.resetFeatureStyle(id);
+```
+
+### Interaction
+
+You can enable interacting (click, mouseover, etc.) with layer features if you pass the option `interactive: true`; you can then add listeners to the VectorGrid layer. When
+an event fires, it will include the `layer` property, containing information about the feature.
 
 ### SVG vs `<canvas>`
 
