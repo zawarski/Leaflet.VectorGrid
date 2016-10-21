@@ -8,12 +8,39 @@ L.VectorGrid = L.GridLayer.extend({
 		interactive: false,
 	},
 
+	initialize: function() {
+		L.GridLayer.prototype.initialize.apply(this, arguments);
+		this._features = {};
+		if (this.options.getFeatureId) {
+			this._vectorTiles = {};
+			this.on('tileunload', function(e) {
+				var tile = this._vectorTiles[this._tileCoordsToKey(e.coords)];
+				if (tile) {
+					for (var layerId in tile._layers) {
+						var layer = tile._layers[layerId];
+						var id = this.options.getFeatureId(layer);
+						var featureData = this._features[id];
+						delete featureData[L.stamp(layer)];
+						if (--featureData.count <= 0) {
+							delete this._features[id];
+						}
+					}
+				}
+			}, this);
+		}
+	},
+
 	createTile: function(coords, done) {
+		var storeFeatures = this.options.getFeatureId;
+
 		var tileSize = this.getTileSize();
-		var renderer = this.options.rendererFactory(this._map, coords, tileSize, this.options);
+		var renderer = this.options.rendererFactory(coords, tileSize, this.options);
 
 		var vectorTilePromise = this._getVectorTilePromise(coords);
 
+		if (storeFeatures) {
+			this._vectorTiles[this._tileCoordsToKey(coords)] = renderer;
+		}
 
 		vectorTilePromise.then( function renderTile(vectorTile) {
 
@@ -35,51 +62,132 @@ L.VectorGrid = L.GridLayer.extend({
 					layerStyle(feat.properties, coords.z) :
 					layerStyle;
 
-					this._mkFeatureParts(feat, pxPerExtent);
 
 					if (!(styleOptions instanceof Array)) {
 						styleOptions = [styleOptions];
+					}
+
+					if (!styleOptions.length) {
+						continue;
+					}
+
+					this._mkFeatureParts(feat, pxPerExtent);
+
+					if (storeFeatures) {
+						var id = this.options.getFeatureId(feat);
+						var featureData = this._features[id];
+						if (!featureData) {
+							this._features[id] = featureData = {
+								subFeatures: {},
+								zoom: coords.z,
+								count: 0
+							}
+						}
+
+						featureData.subFeatures[L.stamp(feat)] = {
+							layerName: layerName,
+							renderer: renderer,
+							feature: feat
+						};
+						featureData.count++;
 					}
 
 					/// Style can be an array of styles, for styling a feature
 					/// more than once...
 					for (var j in styleOptions) {
 						var style = L.extend({}, L.Path.prototype.options, styleOptions[j]);
-
-						if (feat.type === 2) {	// Polyline
-							style.fill = false;
-						}
-
-
-						feat.options = style;
-						renderer._initPath( feat );
-						renderer._updateStyle( feat );
-
-						if (feat.type === 1) { // Points
-							feat._radius = style.radius,
-							renderer._updateCircle( feat );
-						} else if (feat.type === 2) {	// Polyline
-							renderer._updatePoly(feat, false);
-						} else if (feat.type === 3) {	// Polygon
-							renderer._updatePoly(feat, true);
-						}
-
-						if (this.options.interactive) {
-							this._makeInteractive(feat);
-						}
-
-						renderer._addPath( feat );
+						this._addFeature(renderer, feat, style);
 					}
 				}
 
 			}
+			renderer.addTo(map);
 			L.Util.requestAnimFrame(done.bind(coords, null, null));
 		}.bind(this));
 
 		return renderer.getContainer();
 	},
 
+	setFeatureStyle: function(id, layerStyle) {
+		var featureData = this._features[id];
 
+		if (!featureData) {
+			return;
+		}
+
+		for (var i in featureData.subFeatures) {
+			var data = featureData.subFeatures[i];
+			var feat = data.feature;
+			var renderer = data.renderer;
+			var styleOptions = (layerStyle instanceof Function) ?
+			layerStyle(feat.properties, featureData.zoom) :
+			layerStyle;
+			this._updateStyles(feat, renderer, styleOptions);
+		}
+	},
+
+	resetFeatureStyle: function(id) {
+		var featureData = this._features[id];
+
+		if (!featureData) {
+			return;
+		}
+
+
+		for (var i in featureData.subFeatures) {
+			var data = featureData.subFeatures[i];
+			var feat = data.feature;
+			var renderer = data.renderer;
+			var layerStyle = this.options.vectorTileLayerStyles[ data.layerName ] ||
+			L.Path.prototype.options;
+			var styleOptions = (layerStyle instanceof Function) ?
+			layerStyle(feat.properties, featureData.zoom) :
+			layerStyle;
+			this._updateStyles(feat, renderer, styleOptions);
+		}
+	},
+
+	_updateStyles: function(feat, renderer, styleOptions) {
+		if (!(styleOptions instanceof Array)) {
+			styleOptions = [styleOptions];
+		}
+
+		for (var j in styleOptions) {
+			var style = L.extend({}, L.Path.prototype.options, styleOptions[j]);
+			if (feat.type === 2) {	// Polyline
+				style.fill = false;
+			}
+			feat.options = style;
+			renderer._updateStyle(feat);
+		}
+	},
+
+	_addFeature: function(renderer, feat, style) {
+		if (feat.type === 2) {	// Polyline
+			style.fill = false;
+		}
+
+		feat.options = style;
+		renderer._initPath( feat );
+		renderer._updateStyle( feat );
+
+		if (feat.type === 1) { // Points
+			feat._radius = style.radius,
+			feat._updatePath = function() { renderer._updateCircle( feat ) };
+		} else if (feat.type === 2) {	// Polyline
+			feat._updatePath = function() { renderer._updatePoly(feat, false); };
+		} else if (feat.type === 3) {	// Polygon
+			feat._updatePath = function() { renderer._updatePoly(feat, true); };
+		}
+
+		feat._updatePath();
+
+		if (this.options.interactive) {
+			this._makeInteractive(feat);
+		}
+
+		renderer._addPath( feat );
+	},
 
 	// Fills up feat._parts based on the geometry and pxPerExtent,
 	// pretty much as L.Polyline._projectLatLngs and L.Polyline._clipPoints

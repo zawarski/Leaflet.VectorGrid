@@ -73,7 +73,7 @@ L.VectorGrid.Slicer = L.VectorGrid.extend({
 		for (var i in this.options) {
 			if (i !== 'rendererFactory' &&
 				i !== 'vectorTileLayerStyles' &&
-				typeof (this.options[i] !== 'function')
+				typeof (this.options[i]) !== 'function'
 			) {
 				options[i] = this.options[i];
 			}

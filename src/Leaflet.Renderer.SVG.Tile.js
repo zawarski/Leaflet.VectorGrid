@@ -2,9 +2,8 @@
 
 L.SVG.Tile = L.SVG.extend({
 
-	initialize: function (map, tileCoord, tileSize, options) {
+	initialize: function (tileCoord, tileSize, options) {
 		L.SVG.prototype.initialize.call(this, options);
-		this._map = map;
 		this._size = tileSize;
 
 		this._initContainer();
@@ -16,27 +15,28 @@ L.SVG.Tile = L.SVG.extend({
 			// By default, Leaflet tiles do not have pointer events
 		    this._container.style.pointerEvents = 'auto';
 		}
+		this._layers = {};
 	},
 
 	getContainer: function() {
 		return this._container;
 	},
 
-// 	onAdd: function() {},
-	onAdd: L.Util.FalseFn,
+	onAdd: L.Util.falseFn,
+
+	addTo: function(map) {
+		this._map = map;
+		if (this.options.interactive) {
+			for (var i in this._layers) {
+				var layer = this._layers[i];
+				this._map._targets[L.stamp(layer._path)] = layer;
+			}
+		}
+	},
 
 	_initContainer: function() {
 		L.SVG.prototype._initContainer.call(this);
 		var rect =  L.SVG.create('rect');
-
-// 		rect.setAttribute('x', 0);
-// 		rect.setAttribute('y', 0);
-// 		rect.setAttribute('width', this._size.x);
-// 		rect.setAttribute('height', this._size.y);
-// 		rect.setAttribute('fill', 'transparent');
-// 		rect.setAttribute('stroke', 'black');
-// 		rect.setAttribute('stroke-width', 2);
-// 		this._rootGroup.appendChild(rect);
 	},
 
 	/// TODO: Modify _initPath to include an extra parameter, a group name
@@ -44,15 +44,13 @@ L.SVG.Tile = L.SVG.extend({
 
 	_addPath: function (layer) {
 		this._rootGroup.appendChild(layer._path);
-		if (this.options.interactive) {
-			this._map._targets[L.stamp(layer._path)] = layer;
-		}
+		this._layers[L.stamp(layer)] = layer;
 	},
 
 });
 
 
-L.svg.tile = function(map, tileCoord, tileSize, opts){
-	return new L.SVG.Tile(map, tileCoord, tileSize, opts);
+L.svg.tile = function(tileCoord, tileSize, opts){
+	return new L.SVG.Tile(tileCoord, tileSize, opts);
 }
 

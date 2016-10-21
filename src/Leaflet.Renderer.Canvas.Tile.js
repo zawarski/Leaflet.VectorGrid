@@ -2,9 +2,8 @@
 
 L.Canvas.Tile = L.Canvas.extend({
 
-	initialize: function (map, tileCoord, tileSize, options) {
+	initialize: function (tileCoord, tileSize, options) {
 		L.Canvas.prototype.initialize.call(this, options);
-		this._map = map;
 		this._tileCoord = tileCoord;
 		this._size = tileSize;
 
@@ -30,7 +29,9 @@ L.Canvas.Tile = L.Canvas.extend({
 
 	onAdd: L.Util.falseFn,
 
-	_requestRedraw: L.Util.falseFn,
+	addTo: function(map) {
+		this._map = map;
+	},
 
 	_onClick: function (e) {
 		var point = this._map.mouseEventToLayerPoint(e).subtract(this.getOffset()), layers = [], layer;
@@ -61,7 +62,7 @@ L.Canvas.Tile = L.Canvas.extend({
 });
 
 
-L.canvas.tile = function(map, tileCoord, tileSize, opts){
-	return new L.Canvas.Tile(map, tileCoord, tileSize, opts);
+L.canvas.tile = function(tileCoord, tileSize, opts){
+	return new L.Canvas.Tile(tileCoord, tileSize, opts);
 }
 
