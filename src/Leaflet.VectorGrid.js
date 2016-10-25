@@ -267,6 +267,13 @@ L.VectorGrid = L.GridLayer.extend({
 		bounds.max._add(p);
 
 		return bounds;
+	},
+
+	_removeAllTiles: function() {
+		// Avoid running the tileunload logic to remove each feature one by one
+		this._vectorTiles = {};
+		this._features = {};
+		return L.GridLayer.prototype._removeAllTiles.call(this);
 	}
 });
 
