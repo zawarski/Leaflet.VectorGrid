@@ -16,10 +16,6 @@ L.VectorGrid = L.GridLayer.extend({
 				delete this._vectorTiles[this._tileCoordsToKey(e.coords)];
 			}, this);
 		}
-
-		this._renderTime = 0;
-		this._pathsDrawn = 0;
-		this.on('load', function() { console.log(Object.keys(this._vectorTiles).length,'tiles', this._pathsDrawn, 'paths', this._renderTime, 'ms'); });
 	},
 
 	createTile: function(coords, done) {
@@ -36,7 +32,6 @@ L.VectorGrid = L.GridLayer.extend({
 		}
 
 		vectorTilePromise.then( function renderTile(vectorTile) {
-			var t0 = performance.now();
 			for (var layerName in vectorTile.layers) {
 				var layer = vectorTile.layers[layerName];
 
@@ -67,7 +62,6 @@ L.VectorGrid = L.GridLayer.extend({
 						var style = L.extend({}, L.Path.prototype.options, styleOptions[j]);
 						featureLayer.render(renderer, style);
 						renderer._addPath(featureLayer);
-						this._pathsDrawn++;
 					}
 
 					if (this.options.interactive) {
@@ -86,7 +80,6 @@ L.VectorGrid = L.GridLayer.extend({
 
 			}
 			renderer.addTo(this._map);
-			this._renderTime += performance.now() - t0;
 			L.Util.requestAnimFrame(done.bind(coords, null, null));
 		}.bind(this));
 
