@@ -10,22 +10,10 @@ L.VectorGrid = L.GridLayer.extend({
 
 	initialize: function() {
 		L.GridLayer.prototype.initialize.apply(this, arguments);
-		this._features = {};
 		if (this.options.getFeatureId) {
 			this._vectorTiles = {};
 			this.on('tileunload', function(e) {
-				var tile = this._vectorTiles[this._tileCoordsToKey(e.coords)];
-				if (tile) {
-					for (var layerId in tile._layers) {
-						var layer = tile._layers[layerId];
-						var id = this.options.getFeatureId(layer);
-						var featureData = this._features[id];
-						delete featureData[L.stamp(layer)];
-						if (--featureData.count <= 0) {
-							delete this._features[id];
-						}
-					}
-				}
+				delete this._vectorTiles[this._tileCoordsToKey(e.coords)];
 			}, this);
 		}
 	},
@@ -40,6 +28,7 @@ L.VectorGrid = L.GridLayer.extend({
 
 		if (storeFeatures) {
 			this._vectorTiles[this._tileCoordsToKey(coords)] = renderer;
+			renderer._features = {};
 		}
 
 		vectorTilePromise.then( function renderTile(vectorTile) {
@@ -75,21 +64,11 @@ L.VectorGrid = L.GridLayer.extend({
 
 					if (storeFeatures) {
 						var id = this.options.getFeatureId(feat);
-						var featureData = this._features[id];
-						if (!featureData) {
-							this._features[id] = featureData = {
-								subFeatures: {},
-								zoom: coords.z,
-								count: 0
-							}
-						}
 
-						featureData.subFeatures[L.stamp(feat)] = {
+						renderer._features[id] = {
 							layerName: layerName,
-							renderer: renderer,
 							feature: feat
 						};
-						featureData.count++;
 					}
 
 					/// Style can be an array of styles, for styling a feature
@@ -109,41 +88,34 @@ L.VectorGrid = L.GridLayer.extend({
 	},
 
 	setFeatureStyle: function(id, layerStyle) {
-		var featureData = this._features[id];
-
-		if (!featureData) {
-			return;
-		}
-
-		for (var i in featureData.subFeatures) {
-			var data = featureData.subFeatures[i];
-			var feat = data.feature;
-			var renderer = data.renderer;
-			var styleOptions = (layerStyle instanceof Function) ?
-			layerStyle(feat.properties, featureData.zoom) :
-			layerStyle;
-			this._updateStyles(feat, renderer, styleOptions);
+		for (var tileKey in this._vectorTiles) {
+			var tile = this._vectorTiles[tileKey];
+			var features = tile._features;
+			var data = features[id];
+			if (data) {
+				var feat = data.feature;
+				var styleOptions = (layerStyle instanceof Function) ?
+				layerStyle(feat.properties, featureData.zoom) :
+				layerStyle;
+				this._updateStyles(feat, tile, styleOptions);
+			}
 		}
 	},
 
 	resetFeatureStyle: function(id) {
-		var featureData = this._features[id];
-
-		if (!featureData) {
-			return;
-		}
-
-
-		for (var i in featureData.subFeatures) {
-			var data = featureData.subFeatures[i];
-			var feat = data.feature;
-			var renderer = data.renderer;
-			var layerStyle = this.options.vectorTileLayerStyles[ data.layerName ] ||
-			L.Path.prototype.options;
-			var styleOptions = (layerStyle instanceof Function) ?
-			layerStyle(feat.properties, featureData.zoom) :
-			layerStyle;
-			this._updateStyles(feat, renderer, styleOptions);
+		for (var tileKey in this._vectorTiles) {
+			var tile = this._vectorTiles[tileKey];
+			var features = tile._features;
+			var data = features[id];
+			if (data) {
+				var feat = data.feature;
+				var layerStyle = this.options.vectorTileLayerStyles[ data.layerName ] ||
+				L.Path.prototype.options;
+				var styleOptions = (layerStyle instanceof Function) ?
+				layerStyle(feat.properties, tile.getCoord().z) :
+				layerStyle;
+				this._updateStyles(feat, tile, styleOptions);
+			}
 		}
 	},
 
@@ -268,13 +240,6 @@ L.VectorGrid = L.GridLayer.extend({
 
 		return bounds;
 	},
-
-	_removeAllTiles: function() {
-		// Avoid running the tileunload logic to remove each feature one by one
-		this._vectorTiles = {};
-		this._features = {};
-		return L.GridLayer.prototype._removeAllTiles.call(this);
-	}
 });
 
 

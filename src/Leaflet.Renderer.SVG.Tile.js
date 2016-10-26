@@ -18,6 +18,10 @@ L.SVG.Tile = L.SVG.extend({
 		this._layers = {};
 	},
 
+	getCoord: function() {
+		return this._tileCoord;
+	},
+
 	getContainer: function() {
 		return this._container;
 	},

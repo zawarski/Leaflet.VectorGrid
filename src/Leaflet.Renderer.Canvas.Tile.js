@@ -19,6 +19,10 @@ L.Canvas.Tile = L.Canvas.extend({
 		}
 	},
 
+	getCoord: function() {
+		return this._tileCoord;
+	},
+
 	getContainer: function() {
 		return this._container;
 	},
