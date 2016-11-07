@@ -1,7 +1,7 @@
 
-
 ## 1.1.0
 
+* Support for mouse/pointer events on geometries (by @perliedman)
 * Support for point symbolizers as basic `CircleMarker`s (by @perliedman)
 
 ## 1.0.1
