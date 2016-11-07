@@ -20,6 +20,8 @@ With sliced TopoJSON: http://leaflet.github.io/Leaflet.VectorGrid/dist/demo/demo
 
 With protobuf `VectorTile`s: http://leaflet.github.io/Leaflet.VectorGrid/dist/demo/demo-vectortiles.html
 
+With clickable points and lines (from protobuf tiles): http://leaflet.github.io/Leaflet.VectorGrid/dist/demo/demo-points.html
+
 
 ## Using
 
