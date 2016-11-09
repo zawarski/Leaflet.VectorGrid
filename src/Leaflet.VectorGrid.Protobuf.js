@@ -1,6 +1,6 @@
 
 // Network & Protobuf powered!
-// NOTE: Assumes the globals `VectorTile` and `Pbf` exist!!!
+// NOTE: Assumes the globals `vectorTile` and `Pbf` exist!!!
 L.VectorGrid.Protobuf = L.VectorGrid.extend({
 
 	options: {
