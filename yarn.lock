@@ -553,8 +553,8 @@ forever-agent@~0.6.1:
   resolved "https://registry.yarnpkg.com/forever-agent/-/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
 
 form-data@~2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.1.1.tgz#4adf0342e1a79afa1e84c8c320a9ffc82392a1f3"
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.1.2.tgz#89c3534008b97eada4cbb157d58f6f5df025eae4"
   dependencies:
     asynckit "^0.4.0"
     combined-stream "^1.0.5"
@@ -686,7 +686,33 @@ global-prefix@^0.1.4:
     osenv "^0.1.3"
     which "^1.2.10"
 
-gobble:
+gobble-cli@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/gobble-cli/-/gobble-cli-0.7.0.tgz#1bb9376fff264026c799aa6e7602193eaacb733f"
+  dependencies:
+    ansi-regex "^2.0.0"
+    chalk "^1.1.0"
+    chokidar "^1.0.3"
+    cli-spinner "~0.2.1"
+    findup-sync "^0.4.0"
+    graceful-fs "^4.1.2"
+    interpret "^1.0.0"
+    liftoff "^2.1.0"
+    minimist "^1.1.1"
+    pathwatcher "^6.5.0"
+    prompt "^1.0.0"
+    semver "^5.1.0"
+    sorcery "^0.10.0"
+    stevedore "~0.1.4"
+    v8flags "^2.0.9"
+
+gobble-rollup@^0.36.0:
+  version "0.36.0"
+  resolved "https://registry.yarnpkg.com/gobble-rollup/-/gobble-rollup-0.36.0.tgz#af2cac0690326c40168d522dff4f0c81d204756b"
+  dependencies:
+    rollup "^0.36.0"
+
+gobble@^0.11.3:
   version "0.11.3"
   resolved "https://registry.yarnpkg.com/gobble/-/gobble-0.11.3.tgz#55029cf981019e5f8a26da12cece774795cd5e62"
   dependencies:
@@ -709,32 +735,6 @@ gobble:
     sorcery "^0.9.3"
     source-map-support "^0.4.0"
     tiny-lr "~0.2.1"
-
-gobble-cli@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/gobble-cli/-/gobble-cli-0.7.0.tgz#1bb9376fff264026c799aa6e7602193eaacb733f"
-  dependencies:
-    ansi-regex "^2.0.0"
-    chalk "^1.1.0"
-    chokidar "^1.0.3"
-    cli-spinner "~0.2.1"
-    findup-sync "^0.4.0"
-    graceful-fs "^4.1.2"
-    interpret "^1.0.0"
-    liftoff "^2.1.0"
-    minimist "^1.1.1"
-    pathwatcher "^6.5.0"
-    prompt "^1.0.0"
-    semver "^5.1.0"
-    sorcery "^0.10.0"
-    stevedore "~0.1.4"
-    v8flags "^2.0.9"
-
-gobble-rollup:
-  version "0.36.0"
-  resolved "https://registry.yarnpkg.com/gobble-rollup/-/gobble-rollup-0.36.0.tgz#af2cac0690326c40168d522dff4f0c81d204756b"
-  dependencies:
-    rollup "^0.36.0"
 
 graceful-fs@^4.1.2, graceful-fs@^4.1.3, graceful-fs@~4.1.3:
   version "4.1.10"
@@ -1270,7 +1270,7 @@ pathwatcher@^6.5.0:
     runas "^3.1.0"
     underscore-plus "~1.x"
 
-pbf:
+pbf@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/pbf/-/pbf-3.0.2.tgz#61156bf374b1cdfc1f55d9842104349529b5b48c"
   dependencies:
@@ -1489,14 +1489,14 @@ rimraf@~2.2.2:
   version "2.2.8"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.2.8.tgz#e439be2aaee327321952730f99a8929e4fc50582"
 
-rollup-plugin-buble:
+rollup-plugin-buble@^0.14.0:
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/rollup-plugin-buble/-/rollup-plugin-buble-0.14.0.tgz#3726db55fef9b9cd37cebed559cbbd4b9b2e5bc6"
   dependencies:
     buble "^0.14.0"
     rollup-pluginutils "^1.5.0"
 
-rollup-plugin-commonjs:
+rollup-plugin-commonjs@^5.0.5:
   version "5.0.5"
   resolved "https://registry.yarnpkg.com/rollup-plugin-commonjs/-/rollup-plugin-commonjs-5.0.5.tgz#14f93d92cb70e6c31142914b83cd3e904be30c1f"
   dependencies:
@@ -1506,14 +1506,14 @@ rollup-plugin-commonjs:
     resolve "^1.1.7"
     rollup-pluginutils "^1.5.1"
 
-rollup-plugin-file-as-blob:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-file-as-blob/-/rollup-plugin-file-as-blob-1.0.1.tgz#d1b07729b896624f42d0ec95eb30bc6d186816be"
+rollup-plugin-file-as-blob@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-file-as-blob/-/rollup-plugin-file-as-blob-1.1.2.tgz#a4946b9ca9a49446ffe95884b6fad6b21736e1e9"
   dependencies:
     mmmagic "^0.4.5"
     rollup-pluginutils "^1.5.2"
 
-rollup-plugin-node-resolve:
+rollup-plugin-node-resolve@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/rollup-plugin-node-resolve/-/rollup-plugin-node-resolve-2.0.0.tgz#07e0ae94ac002a3ea36e8f33ca121d9f836b1309"
   dependencies:
@@ -1521,7 +1521,7 @@ rollup-plugin-node-resolve:
     builtin-modules "^1.1.0"
     resolve "^1.1.6"
 
-rollup-plugin-uglify:
+rollup-plugin-uglify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/rollup-plugin-uglify/-/rollup-plugin-uglify-1.0.1.tgz#11d0b0c8bcd2d07e6908f74fd16b0152390b922a"
   dependencies:
@@ -1704,7 +1704,7 @@ tiny-lr@~0.2.1:
     parseurl "~1.3.0"
     qs "~5.1.0"
 
-topojson:
+topojson@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/topojson/-/topojson-2.0.0.tgz#6bcd44a2f5d755ec4715656d408e0c7cb0858dbe"
   dependencies:
@@ -1791,7 +1791,7 @@ v8flags@^2.0.9:
   dependencies:
     user-home "^1.1.1"
 
-vector-tile:
+vector-tile@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/vector-tile/-/vector-tile-1.3.0.tgz#06d516a83b063f04c82ef539cf1bb1aebeb696b4"
   dependencies:

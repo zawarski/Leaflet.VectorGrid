@@ -29,7 +29,7 @@ var uglifiedWebWorker = src.transform('rollup', {
 	entry: 'slicerWebWorker.js',
 	dest: 'slicerWebWorker.js.worker',
 	format: 'cjs',
-	sourceMap: true,
+	sourceMap: false,
 	plugins: [
 		require('rollup-plugin-buble')({
 			include: '**/**.js'
