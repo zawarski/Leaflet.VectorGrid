@@ -30,7 +30,7 @@
     "gobble-rollup": "^0.36.0",
     "rollup-plugin-buble": "^0.14.0",
     "rollup-plugin-commonjs": "^5.0.5",
-    "rollup-plugin-file-as-blob": "^1.1.1",
+    "rollup-plugin-file-as-blob": "^1.1.0",
     "rollup-plugin-node-resolve": "^2.0.0",
     "rollup-plugin-uglify": "^1.0.1"
   },
