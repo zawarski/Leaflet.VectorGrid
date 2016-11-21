@@ -82,9 +82,13 @@ var builtCode = src2.transform('rollup', {
 var bundledCode = src2.transform('rollup', {
 	entry: 'bundle-extra.js',
 	dest: 'Leaflet.VectorGrid.bundled.js',
-	format: 'cjs',
+	format: 'iife',
 	sourceMap: true,
-	plugins: rollupPluginOptions
+	plugins: rollupPluginOptions,
+	globals: {
+		Pbf: 'Pbf',
+		VectorTile: 'vector-tile',
+	}
 });
 
 

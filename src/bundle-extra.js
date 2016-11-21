@@ -3,7 +3,7 @@
 // for protobuf tiles
 
 import {} from 'pbf';
-import {} from 'vector-tile';
+import {VectorTile} from 'vector-tile';
 
 import {} from './Leaflet.VectorGrid.js';
 import {} from './Leaflet.VectorGrid.Protobuf.js';
