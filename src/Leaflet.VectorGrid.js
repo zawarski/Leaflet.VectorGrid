@@ -1,4 +1,4 @@
-
+import {} from './Leaflet.Renderer.SVG.Tile.js';
 
 L.VectorGrid = L.GridLayer.extend({
 
