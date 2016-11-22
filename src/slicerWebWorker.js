@@ -1,6 +1,5 @@
 import geojsonvt from 'geojson-vt';
-import { topology as topojson } from 'topojson';
-
+import * as topojson from "topojson-client";
 
 var slicers = {};
 var options;
