@@ -4,6 +4,7 @@ L.SVG.Tile = L.SVG.extend({
 
 	initialize: function (tileCoord, tileSize, options) {
 		L.SVG.prototype.initialize.call(this, options);
+		this._tileCoord = tileCoord;
 		this._size = tileSize;
 
 		this._initContainer();
