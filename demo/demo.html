@@ -6,16 +6,13 @@
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<link rel="stylesheet" href="https://leafletjs-cdn.s3.amazonaws.com/content/leaflet/master/leaflet.css" />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet-src.js"></script>
+	<script src="../dist/Leaflet.VectorGrid.bundled.js"></script>
+	<script type="text/javascript" src="eu-countries.js"></script>
 </head>
 <body style='margin:0'>
 	<div id="map" style="width: 100vw; height: 100vh"></div>
-
-	<script src="https://leafletjs-cdn.s3.amazonaws.com/content/leaflet/master/leaflet-src.js"></script>
-	<script type="text/javascript" src="eu-countries.js"></script>
-
-	<script type="text/javascript" src="../node_modules/geojson-vt/geojson-vt-dev.js"></script>
-	<script type="text/javascript" src="../src/Leaflet.GridLayer.Vector.js"></script>
 
 	<script>
 
@@ -54,7 +51,7 @@
 
 
 // 		var vectorGrid = L.gridLayer.vector().addTo(map);
-		var vectorGrid = L.gridLayer.vector.slicer( euCountries, {
+		var vectorGrid = L.vectorGrid.slicer( euCountries, {
 			buffer: 0,
 			style: function(feat) {
 				var p = feat.properties.mapcolor7 % 5;
