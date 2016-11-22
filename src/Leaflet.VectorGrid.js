@@ -95,7 +95,7 @@ L.VectorGrid = L.GridLayer.extend({
 			if (data) {
 				var feat = data.feature;
 				var styleOptions = (layerStyle instanceof Function) ?
-				layerStyle(feat.properties, featureData.zoom) :
+				layerStyle(feat.properties, tile.getCoord().z) :
 				layerStyle;
 				this._updateStyles(feat, tile, styleOptions);
 			}
