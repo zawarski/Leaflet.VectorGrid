@@ -3,6 +3,7 @@
 
 * Refactored the code modules into ES6 modules
 * Switched the build system and dependencies to use RollupJS
+* Store styles set through `setFeatureStyle` so the changes persist after zooming/panning
 
 ## 1.1.0
 
