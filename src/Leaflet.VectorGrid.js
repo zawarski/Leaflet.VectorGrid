@@ -13,6 +13,7 @@ L.VectorGrid = L.GridLayer.extend({
 		L.GridLayer.prototype.initialize.apply(this, arguments);
 		if (this.options.getFeatureId) {
 			this._vectorTiles = {};
+			this._overriddenStyles = {};
 			this.on('tileunload', function(e) {
 				delete this._vectorTiles[this._tileCoordsToKey(e.coords)];
 			}, this);
@@ -44,10 +45,20 @@ L.VectorGrid = L.GridLayer.extend({
 
 				for (var i in layer.features) {
 					var feat = layer.features[i];
+					var id;
 
-					var styleOptions = (layerStyle instanceof Function) ?
-					layerStyle(feat.properties, coords.z) :
-					layerStyle;
+					var styleOptions = layerStyle;
+					if (storeFeatures) {
+						id = this.options.getFeatureId(feat);
+						var styleOverride = this._overriddenStyles[id];
+						if (styleOverride) {
+							styleOptions = styleOverride[layerName];
+						}
+					}
+
+					if (styleOptions instanceof Function) {
+						styleOptions = styleOptions(feat.properties, coords.z);
+					}
 
 					if (!(styleOptions instanceof Array)) {
 						styleOptions = [styleOptions];
@@ -70,8 +81,6 @@ L.VectorGrid = L.GridLayer.extend({
 					}
 
 					if (storeFeatures) {
-						var id = this.options.getFeatureId(feat);
-
 						renderer._features[id] = {
 							layerName: layerName,
 							feature: featureLayer
@@ -88,11 +97,14 @@ L.VectorGrid = L.GridLayer.extend({
 	},
 
 	setFeatureStyle: function(id, layerStyle) {
+		var styleOverride = this._overriddenStyles[id] = {}
+
 		for (var tileKey in this._vectorTiles) {
 			var tile = this._vectorTiles[tileKey];
 			var features = tile._features;
 			var data = features[id];
 			if (data) {
+				styleOverride[data.layerName] = layerStyle;
 				var feat = data.feature;
 				var styleOptions = (layerStyle instanceof Function) ?
 				layerStyle(feat.properties, tile.getCoord().z) :
@@ -103,6 +115,8 @@ L.VectorGrid = L.GridLayer.extend({
 	},
 
 	resetFeatureStyle: function(id) {
+		delete this._overriddenStyles[id];
+
 		for (var tileKey in this._vectorTiles) {
 			var tile = this._vectorTiles[tileKey];
 			var features = tile._features;
