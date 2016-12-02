@@ -1,4 +1,7 @@
 
+import Pbf from 'pbf';
+import {VectorTile} from 'vector-tile';
+
 // Network & Protobuf powered!
 // NOTE: Assumes the globals `VectorTile` and `Pbf` exist!!!
 L.VectorGrid.Protobuf = L.VectorGrid.extend({
@@ -45,7 +48,7 @@ L.VectorGrid.Protobuf = L.VectorGrid.extend({
 						// blob.type === 'application/x-protobuf'
 						var pbf = new Pbf( reader.result );
 // 						console.log(pbf);
-						return resolve(new vectorTile.VectorTile( pbf ));
+						return resolve(new VectorTile( pbf ));
 
 					});
 					reader.readAsArrayBuffer(blob);

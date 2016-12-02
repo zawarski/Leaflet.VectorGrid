@@ -1,4 +1,9 @@
 
+## 1.2.0
+
+* Refactored the code modules into ES6 modules
+* Switched the build system and dependencies to use RollupJS
+
 ## 1.1.0
 
 * Support for mouse/pointer events on geometries (by @perliedman)

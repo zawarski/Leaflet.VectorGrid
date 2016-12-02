@@ -12,6 +12,7 @@ L.Canvas.Tile = L.Canvas.extend({
 		this._container.setAttribute('height', this._size.y);
 		this._layers = {};
 		this._drawnLayers = {};
+		this._drawing = true;
 
 		if (options.interactive) {
 			// By default, Leaflet tiles do not have pointer events

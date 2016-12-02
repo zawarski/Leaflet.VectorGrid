@@ -1,14 +1,15 @@
-
+import {} from './Leaflet.Renderer.SVG.Tile.js';
 
 L.VectorGrid = L.GridLayer.extend({
 
 	options: {
 		rendererFactory: L.svg.tile,
 		vectorTileLayerStyles: {},
-		interactive: false,
+		interactive: false
 	},
 
-	initialize: function() {
+	initialize: function(options) {
+		L.setOptions(this, options);
 		L.GridLayer.prototype.initialize.apply(this, arguments);
 		if (this.options.getFeatureId) {
 			this._vectorTiles = {};
@@ -94,7 +95,7 @@ L.VectorGrid = L.GridLayer.extend({
 			if (data) {
 				var feat = data.feature;
 				var styleOptions = (layerStyle instanceof Function) ?
-				layerStyle(feat.properties, featureData.zoom) :
+				layerStyle(feat.properties, tile.getCoord().z) :
 				layerStyle;
 				this._updateStyles(feat, tile, styleOptions);
 			}
@@ -130,7 +131,7 @@ L.VectorGrid = L.GridLayer.extend({
 	},
 
 	_createLayer: function(feat, pxPerExtent, layerStyle) {
-		var layerFactory;
+		var layer;
 		switch (feat.type) {
 		case 1:
 			layer = new PointLayer(feat, pxPerExtent, this.options.interactive);
@@ -204,7 +205,7 @@ var PointLayer = L.CircleMarker.extend({
 	},
 
 	_makeFeatureParts: function(feat, pxPerExtent) {
-		coord = feat.geometry[0][0];
+		var coord = feat.geometry[0][0];
 		if ('x' in coord) {
 			this._point = L.point(coord.x * pxPerExtent, coord.y * pxPerExtent);
 			this._empty = L.Util.falseFn;
@@ -222,6 +223,7 @@ var PointLayer = L.CircleMarker.extend({
 var polyBase = {
 	_makeFeatureParts: function(feat, pxPerExtent) {
 		var rings = feat.geometry;
+		var coord;
 
 		this._parts = [];
 		for (var i in rings) {

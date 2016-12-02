@@ -216,7 +216,7 @@ Internally, Leaflet.VectorGrid uses two classes named `L.SVG.Tile` and `L.Canvas
 
 ## Developing
 
-Run `npm install`, then run the `build-script/browserify-dependencies.sh` script. The dependencies do not provide browser-ready packages, see for example [mapbox/geojson-vt#52](https://github.com/mapbox/geojson-vt/pull/52).
+Run `npm install`.
 
 ## TODO
 
