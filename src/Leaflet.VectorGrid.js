@@ -52,7 +52,11 @@ L.VectorGrid = L.GridLayer.extend({
 						id = this.options.getFeatureId(feat);
 						var styleOverride = this._overriddenStyles[id];
 						if (styleOverride) {
-							styleOptions = styleOverride[layerName];
+							if (styleOverride[layerName]) {
+								styleOptions = styleOverride[layerName];
+							} else {
+								styleOptions = styleOverride;
+							}
 						}
 					}
 
@@ -97,18 +101,25 @@ L.VectorGrid = L.GridLayer.extend({
 	},
 
 	setFeatureStyle: function(id, layerStyle) {
-		var styleOverride = this._overriddenStyles[id] = {}
+		this._overriddenStyles[id] = {}
 
 		for (var tileKey in this._vectorTiles) {
 			var tile = this._vectorTiles[tileKey];
 			var features = tile._features;
 			var data = features[id];
 			if (data) {
-				styleOverride[data.layerName] = layerStyle;
+				this._overriddenStyles[id] = layerStyle;
 				var feat = data.feature;
-				var styleOptions = (layerStyle instanceof Function) ?
-				layerStyle(feat.properties, tile.getCoord().z) :
-				layerStyle;
+
+				var styleOptions = layerStyle;
+				if (layerStyle[data.layerName]) {
+					styleOptions = layerStyle[data.layerName];
+				}
+
+				styleOptions = (styleOptions instanceof Function) ?
+					styleOptions(feat.properties, tile.getCoord().z) :
+					styleOptions;
+
 				this._updateStyles(feat, tile, styleOptions);
 			}
 		}
