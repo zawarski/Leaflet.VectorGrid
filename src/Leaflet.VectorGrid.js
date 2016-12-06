@@ -121,6 +121,8 @@ L.VectorGrid = L.GridLayer.extend({
 					styleOptions;
 
 				this._updateStyles(feat, tile, styleOptions);
+			} else {
+				this._overriddenStyles[id] = layerStyle;
 			}
 		}
 	},
