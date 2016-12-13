@@ -14,7 +14,7 @@ L.SVG.Tile = L.SVG.extend({
 
 		if (options.interactive) {
 			// By default, Leaflet tiles do not have pointer events
-		    this._container.style.pointerEvents = 'auto';
+			this._container.style.pointerEvents = 'auto';
 		}
 		this._layers = {};
 	},
@@ -52,6 +52,20 @@ L.SVG.Tile = L.SVG.extend({
 		this._layers[L.stamp(layer)] = layer;
 	},
 
+	_updateIcon: function (layer) {
+		var path = layer._path = L.SVG.create('image'),
+		    icon = layer.options.icon,
+		    options = icon.options,
+		    size = L.point(options.iconSize),
+		    anchor = options.iconAnchor ||
+		        	 size && size.divideBy(2, true),
+		    p = layer._point.subtract(anchor);
+		path.setAttribute('x', p.x);
+		path.setAttribute('y', p.y);
+		path.setAttribute('width', size.x + 'px');
+		path.setAttribute('height', size.y + 'px');
+		path.setAttribute('href', options.iconUrl);
+	}
 });
 
 

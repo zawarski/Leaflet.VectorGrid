@@ -16,7 +16,7 @@ L.Canvas.Tile = L.Canvas.extend({
 
 		if (options.interactive) {
 			// By default, Leaflet tiles do not have pointer events
-		    this._container.style.pointerEvents = 'auto';
+			this._container.style.pointerEvents = 'auto';
 		}
 	},
 
@@ -64,6 +64,29 @@ L.Canvas.Tile = L.Canvas.extend({
 	/// TODO: Modify _initPath to include an extra parameter, a group name
 	/// to order symbolizers by z-index
 
+	_updateIcon: function (layer) {
+		if (!this._drawing) { return; }
+
+		var icon = layer.options.icon,
+		    options = icon.options,
+		    size = L.point(options.iconSize),
+		    anchor = options.iconAnchor ||
+		        	 size && size.divideBy(2, true),
+		    p = layer._point.subtract(anchor),
+		    ctx = this._ctx,
+		    img = layer._getImage(),
+		    size = img.size;
+
+		if (img.image.complete) {
+			ctx.drawImage(img.image, p.x, p.y, size.x, size.y);
+		} else {
+			L.DomEvent.on(img, 'load', function() {
+				ctx.drawImage(img.image, p.x, p.y, size.x, size.y);
+			});
+		}
+
+		this._drawnLayers[layer._leaflet_id] = layer;
+	}
 });
 
 
