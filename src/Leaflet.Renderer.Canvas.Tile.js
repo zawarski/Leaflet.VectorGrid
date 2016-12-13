@@ -74,14 +74,13 @@ L.Canvas.Tile = L.Canvas.extend({
 		        	 size && size.divideBy(2, true),
 		    p = layer._point.subtract(anchor),
 		    ctx = this._ctx,
-		    img = layer._getImage(),
-		    size = img.size;
+		    img = layer._getImage();
 
-		if (img.image.complete) {
-			ctx.drawImage(img.image, p.x, p.y, size.x, size.y);
+		if (img.complete) {
+			ctx.drawImage(img, p.x, p.y, size.x, size.y);
 		} else {
 			L.DomEvent.on(img, 'load', function() {
-				ctx.drawImage(img.image, p.x, p.y, size.x, size.y);
+				ctx.drawImage(img, p.x, p.y, size.x, size.y);
 			});
 		}
 

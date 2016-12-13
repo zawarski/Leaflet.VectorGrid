@@ -279,14 +279,8 @@ var PointLayer = L.CircleMarker.extend({
 			var url = this.options.icon.options.iconUrl,
 			    img = PointLayer.iconCache[url];
 			if (!img) {
-				var icon = this.options.icon,
-				    options = icon.options,
-				    size = L.point(options.iconSize);
-
-				img = PointLayer.iconCache[url] = {
-					image: icon.createIcon(),
-					size: size
-				};
+				var icon = this.options.icon;
+				img = PointLayer.iconCache[url] = icon.createIcon();
 			}
 			return img;
 		} else {
