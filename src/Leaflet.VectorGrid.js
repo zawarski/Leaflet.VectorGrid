@@ -161,13 +161,13 @@ L.VectorGrid = L.GridLayer.extend({
 		var layer;
 		switch (feat.type) {
 		case 1:
-			layer = new PointLayer(feat, pxPerExtent, this.options.interactive);
+			layer = new PointLayer(feat, pxPerExtent);
 			break;
 		case 2:
-			layer = new PolylineLayer(feat, pxPerExtent, this.options.interactive);
+			layer = new PolylineLayer(feat, pxPerExtent);
 			break;
 		case 3:
-			layer = new PolygonLayer(feat, pxPerExtent, this.options.interactive);
+			layer = new PolygonLayer(feat, pxPerExtent);
 			break;
 		}
 
@@ -220,6 +220,10 @@ var FeatureLayer = L.Class.extend({
 var PointLayer = L.CircleMarker.extend({
 	includes: FeatureLayer.prototype,
 
+	statics: {
+		iconCache: {}
+	},
+
 	initialize: function(feature, pxPerExtent) {
 		this.properties = feature.properties;
 		this._makeFeatureParts(feature, pxPerExtent);
@@ -238,12 +242,66 @@ var PointLayer = L.CircleMarker.extend({
 			this._empty = L.Util.falseFn;
 		}
 	},
+
 	makeInteractive: function() {
-		var r = this._radius,
-		    r2 = this._radiusY || r,
-		    w = this._clickTolerance(),
-		    p = [r + w, r2 + w];
-		this._pxBounds = new L.Bounds(this._point.subtract(p), this._point.add(p));
+		this._updateBounds();
+	},
+
+	updateStyle: function(renderer, style) {
+		this._radius = style.radius || this._radius;
+		this._updateBounds();
+		return FeatureLayer.prototype.updateStyle.call(this, renderer, style);
+	},
+
+	_updateBounds: function() {
+		var icon = this.options.icon
+		if (icon) {
+			var size = L.point(icon.options.iconSize),
+			    anchor = icon.options.iconAnchor ||
+			             size && size.divideBy(2, true),
+			    p = this._point.subtract(anchor);
+			this._pxBounds = new L.Bounds(p, p.add(icon.options.iconSize));
+		} else {
+			L.CircleMarker.prototype._updateBounds.call(this);
+		}
+	},
+
+	_updatePath: function() {
+		if (this.options.icon) {
+			this._renderer._updateIcon(this)
+		} else {
+			L.CircleMarker.prototype._updatePath.call(this);
+		}
+	},
+
+	_getImage: function () {
+		if (this.options.icon) {
+			var url = this.options.icon.options.iconUrl,
+			    img = PointLayer.iconCache[url];
+			if (!img) {
+				var icon = this.options.icon,
+				    options = icon.options,
+				    size = L.point(options.iconSize);
+
+				img = PointLayer.iconCache[url] = {
+					image: icon.createIcon(),
+					size: size
+				};
+			}
+			return img;
+		} else {
+			return null;
+		}
+
+	},
+
+	_containsPoint: function(p) {
+		var icon = this.options.icon;
+		if (icon) {
+			return this._pxBounds.contains(p);
+		} else {
+			return L.CircleMarker.prototype._containsPoint.call(this, p);
+		}
 	}
 });
 
