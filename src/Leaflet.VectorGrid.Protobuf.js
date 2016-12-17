@@ -23,13 +23,22 @@ L.VectorGrid.Protobuf = L.VectorGrid.extend({
 
 
 	_getVectorTilePromise: function(coords) {
-		var tileUrl = L.Util.template(this._url, L.extend({
+		var data = {
 			s: this._getSubdomain(coords),
 			x: coords.x,
 			y: coords.y,
 			z: coords.z
 // 			z: this._getZoomForUrl()	/// TODO: Maybe replicate TileLayer's maxNativeZoom
-		}, this.options));
+		};
+		if (this._map && !this._map.options.crs.infinite) {
+			var invertedY = this._globalTileRange.max.y - coords.y;
+			if (this.options.tms) { // Should this option be available in Leaflet.VectorGrid?
+				data['y'] = invertedY;
+			}
+			data['-y'] = invertedY;
+		}
+
+		var tileUrl = L.Util.template(this._url, L.extend(data, this.options));
 
 		return fetch(tileUrl).then(function(response){
 
