@@ -22,6 +22,7 @@ With protobuf `VectorTile`s: http://leaflet.github.io/Leaflet.VectorGrid/dist/de
 
 With clickable points and lines (from protobuf tiles): http://leaflet.github.io/Leaflet.VectorGrid/dist/demo/demo-points.html
 
+With points show as icons: http://leaflet.github.io/Leaflet.VectorGrid/dist/demo/demo-points-icons.html
 
 ## Using
 
@@ -130,11 +131,15 @@ var vectorTileOptions = {
 			}
 		},
 
+		place: {
+			icon: new L.Icon.Default()
+		},
+
 		road: []
 	}
 };
 
-Polylines and polygons can be styled exactly like normal Leaflet overlays, points can be styled like CircleMarkers.
+Polylines and polygons can be styled exactly like normal Leaflet overlays, points can be styled like polygons using CircleMarkers or as Icon.
 
 
 var pbfLayer = L.vectorGrid.protobuf(url, vectorTileOptions).addTo(map);
@@ -224,7 +229,6 @@ Run `npm install`.
  * More `<g>`roups in SVG
  * Offscreen `<canvas>`es in Canvas
 * `getBounds()` support for the slicer (inherit/extrapolate from geojson data)
-* Symbolize points somehow
 
 ## Legalese
 
