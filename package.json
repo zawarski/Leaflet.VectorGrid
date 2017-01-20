@@ -14,7 +14,10 @@
     "geojson",
     "topojson"
   ],
-  "author": "Iván Sánchez Ortega <ivan@sanchezortega.es>",
+  "authors": [
+    "Iván Sánchez Ortega <ivan@sanchezortega.es>",
+    "Per Liedman <per@liedman.net>",
+  ],
   "license": "Beerware",
   "repository": {
     "type": "git",
