@@ -10,4 +10,5 @@ import {} from './Leaflet.VectorGrid.Protobuf.js';
 import {} from './Leaflet.VectorGrid.Slicer.js';
 import {} from './Leaflet.Renderer.Canvas.Tile.js';
 import {} from './Leaflet.Renderer.SVG.Tile.js';
+import {} from './Leaflet.LayerGroup.Mapbox.js';
 

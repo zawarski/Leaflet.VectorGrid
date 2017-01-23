@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet.GridLayer.Vector.Slicer demo</title>
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js"></script>
+	<script src="../Leaflet.VectorGrid.bundled.js"></script>
+
+	<script type="text/javascript" src="./eu-countries.js"></script>
+
+
+</head>
+<body style='margin:0'>
+	<div id="map" style="width: 100vw; height: 100vh"></div>
+
+	<script>
+
+		var map = L.map('map').fitWorld();
+// 		var canvasRenderer = L.canvas();
+
+		var token = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpbG10dnA3NzY3OTZ0dmtwejN2ZnUycjYifQ.1W5oTOnWXQ9R1w8u3Oo1yA';
+
+// 		var dark    = L.layerGroup.mapbox('mapbox://styles/mapbox/dark-v9', token);
+// 		var light   = L.layerGroup.mapbox('mapbox://styles/mapbox/light-v9', token);
+		var streets = L.layerGroup.mapbox('mapbox://styles/mapbox/streets-v9', token).addTo(map);
+// 		var sat     = L.layerGroup.mapbox('mapbox://styles/mapbox/satellite-v9', token);
+// 		var satstreet = L.layerGroup.mapbox('mapbox://styles/mapbox/satellite-street-v9', token);
+// 		var bright  = L.layerGroup.mapbox('mapbox://styles/mapbox/bright-v9', token);
+// 		var basic   = L.layerGroup.mapbox('mapbox://styles/mapbox/basic-v9', token).addTo(map);
+
+		L.control.layers({
+// 			Dark: dark,
+// 			Light: light,
+			Streets: streets,
+// 			Satellite: sat,
+// 			'Satellite-Streets': satstreet
+		}).addTo(map);
+
+	</script>
+</body>
+</html>

@@ -75,6 +75,8 @@ L.VectorGrid = L.GridLayer.extend({
 					var featureLayer = this._createLayer(feat, pxPerExtent);
 
 					for (var j in styleOptions) {
+// 						console.log(j, styleOptions[j]);
+
 						var style = L.extend({}, L.Path.prototype.options, styleOptions[j]);
 						featureLayer.render(renderer, style);
 						renderer._addPath(featureLayer);

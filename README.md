@@ -134,7 +134,7 @@ var vectorTileOptions = {
 	}
 };
 
-Polylines and polygons can be styled exactly like normal Leaflet overlays, points can be styled like CircleMarkers.
+// Polylines and polygons can be styled exactly like normal Leaflet overlays, points can be styled like CircleMarkers.
 
 
 var pbfLayer = L.vectorGrid.protobuf(url, vectorTileOptions).addTo(map);
