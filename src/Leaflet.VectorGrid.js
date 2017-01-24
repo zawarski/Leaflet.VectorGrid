@@ -238,9 +238,14 @@ var PointLayer = L.CircleMarker.extend({
 	},
 
 	_makeFeatureParts: function(feat, pxPerExtent) {
-		var coord = feat.geometry[0][0];
-		if ('x' in coord) {
-			this._point = L.point(coord.x * pxPerExtent, coord.y * pxPerExtent);
+		var coord = feat.geometry[0];
+		if (typeof coord[0] === 'object' && 'x' in coord[0]) {
+			// Protobuf vector tiles return [{x: , y:}]
+			this._point = L.point(coord[0].x * pxPerExtent, coord[0].y * pxPerExtent);
+			this._empty = L.Util.falseFn;
+		} else {
+			// Geojson-vt returns [,]
+			this._point = L.point(coord[0] * pxPerExtent, coord[1] * pxPerExtent);
 			this._empty = L.Util.falseFn;
 		}
 	},
