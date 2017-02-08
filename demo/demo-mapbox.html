@@ -27,21 +27,25 @@
 
 		var token = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpbG10dnA3NzY3OTZ0dmtwejN2ZnUycjYifQ.1W5oTOnWXQ9R1w8u3Oo1yA';
 
-// 		var dark    = L.layerGroup.mapbox('mapbox://styles/mapbox/dark-v9', token);
-// 		var light   = L.layerGroup.mapbox('mapbox://styles/mapbox/light-v9', token);
-		var streets = L.layerGroup.mapbox('mapbox://styles/mapbox/streets-v9', token).addTo(map);
-// 		var sat     = L.layerGroup.mapbox('mapbox://styles/mapbox/satellite-v9', token);
-		var satstreet = L.layerGroup.mapbox('mapbox://styles/mapbox/satellite-streets-v9', token);
+// 		var dark    = ;
+// 		var light   = ;
+// 		var streets = ;
+// 		var sat     = ;
+// 		var satstreet = ;
 // 		var bright  = L.layerGroup.mapbox('mapbox://styles/mapbox/bright-v9', token);
 // 		var basic   = L.layerGroup.mapbox('mapbox://styles/mapbox/basic-v9', token).addTo(map);
 
-		L.control.layers({
-// 			Dark: dark,
-// 			Light: light,
-			Streets: streets,
-// 			Satellite: sat,
-			'Satellite-Streets': satstreet
+		var layercontrol = L.control.layers({
+			Dark:    L.layerGroup.mapbox('mapbox://styles/mapbox/dark-v9', token),
+			Light:   L.layerGroup.mapbox('mapbox://styles/mapbox/light-v9', token),
+			Streets: L.layerGroup.mapbox('mapbox://styles/mapbox/streets-v9', token),
+			Satellite: L.layerGroup.mapbox('mapbox://styles/mapbox/satellite-v9', token),
+			'Satellite-Streets': L.layerGroup.mapbox('mapbox://styles/mapbox/satellite-streets-v9', token)
 		}).addTo(map);
+
+		// Hack!
+		layercontrol._layers[0].layer.addTo(map)
+
 
 	</script>
 </body>

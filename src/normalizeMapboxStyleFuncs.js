@@ -68,7 +68,7 @@ export default function normalize(opts) {
 				}
 // 				res.stroke = !!((res.color !== undefined) && res.opacity && res.weight);
 // 				res.fill   = !!((res.fillColor !== undefined) && res.fillOpacity);
-				return (res.stroke || res.fill) && res;
+				return (res.stroke || res.fill || res.background) && res;
 			}
 		})(funcs);
 	}
@@ -87,7 +87,6 @@ export default function normalize(opts) {
 			return (res.stroke || res.fill) && res;
 		}
 	})(filter, funcs);
-
 }
 
 

@@ -1,6 +1,7 @@
 
 
 import {} from './Leaflet.VectorGrid.Protobuf';
+import {} from './Leaflet.Layer.Background';
 
 import normalize from './normalizeMapboxStyleFuncs.js';
 
@@ -77,12 +78,16 @@ L.LayerGroup.Mapbox = L.LayerGroup.extend({
 					opts = {
 						opacity:  layer.paint['raster-opacity'] || 1,
 					}
+				} else if (layer.type === 'background') {
+// 					this._addBackground( layer.paint['background-color'] );
+					var normalizedBackground = normalize({ background: layer.paint['background-color'] });
+					this._addBackground(normalizedBackground);
 				} else {
 // 					console.log('Unhandled layer type', layer.type);
 // 					opts = {};
 					invisible = true;
 				}
-				/// TODO: Background, circle, symbol (marker), extrusion (fallback to fill)
+				/// TODO: circle, symbol (marker), extrusion (fallback to fill)
 
 				if (layer.filter) {
 					opts.filter = layer.filter;
@@ -136,8 +141,7 @@ L.LayerGroup.Mapbox = L.LayerGroup.extend({
 						style.sources[j].url,
 						L.extend(options, {vectorTileLayerStyles: vectorStyles[j]})
 					);
-				}
-				if (type === 'raster') {
+				} else if (type === 'raster') {
 					this._addRaster(style.sources[j].url, vectorStyles[j]);
 				}
 				/// TODO: image, geojson
@@ -196,6 +200,14 @@ L.LayerGroup.Mapbox = L.LayerGroup.extend({
 // 	_addImageOverlay: function(url, options) {
 //
 // 	}
+
+	_addBackground: function(color) {
+		if (typeof color === 'function') {
+			L.background(color).addTo(this);
+		} else {
+			L.background(color.background).addTo(this);
+		}
+	}
 
 
 });
