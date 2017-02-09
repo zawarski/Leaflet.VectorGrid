@@ -15,7 +15,13 @@ L.VectorGrid = L.GridLayer.extend({
 			this._vectorTiles = {};
 			this._overriddenStyles = {};
 			this.on('tileunload', function(e) {
-				delete this._vectorTiles[this._tileCoordsToKey(e.coords)];
+				var key = this._tileCoordsToKey(e.coords),
+				    tile = this._vectorTiles[key];
+
+				if (tile && this._map) {
+					tile.removeFrom(this._map);
+				}
+				delete this._vectorTiles[key];
 			}, this);
 		}
 	},
