@@ -39,6 +39,16 @@ L.SVG.Tile = L.SVG.extend({
 		}
 	},
 
+	removeFrom: function (map) {
+		if (this.options.interactive) {
+			for (var i in this._layers) {
+				var layer = this._layers[i];
+				delete this._map._targets[L.stamp(layer._path)];
+			}
+		}
+		delete this._map;
+	},
+
 	_initContainer: function() {
 		L.SVG.prototype._initContainer.call(this);
 		var rect =  L.SVG.create('rect');

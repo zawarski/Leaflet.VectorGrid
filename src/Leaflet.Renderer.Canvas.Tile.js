@@ -38,6 +38,10 @@ L.Canvas.Tile = L.Canvas.extend({
 		this._map = map;
 	},
 
+	removeFrom: function (map) {
+		delete this._map;
+	},
+
 	_onClick: function (e) {
 		var point = this._map.mouseEventToLayerPoint(e).subtract(this.getOffset()), layers = [], layer;
 
