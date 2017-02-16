@@ -43,17 +43,17 @@ L.Canvas.Tile = L.Canvas.extend({
 	},
 
 	_onClick: function (e) {
-		var point = this._map.mouseEventToLayerPoint(e).subtract(this.getOffset()), layers = [], layer;
+		var point = this._map.mouseEventToLayerPoint(e).subtract(this.getOffset()), layer, clickedLayer;
 
 		for (var id in this._layers) {
 			layer = this._layers[id];
 			if (layer.options.interactive && layer._containsPoint(point) && !this._map._draggableMoved(layer)) {
-				L.DomEvent._fakeStop(e);
-				layers.push(layer);
+				clickedLayer = layer;
 			}
 		}
-		if (layers.length)  {
-			this._fireEvent(layers, e);
+		if (clickedLayer)  {
+			L.DomEvent.fakeStop(e);
+			this._fireEvent([clickedLayer], e);
 		}
 	},
 
@@ -61,7 +61,6 @@ L.Canvas.Tile = L.Canvas.extend({
 		if (!this._map || this._map.dragging.moving() || this._map._animatingZoom) { return; }
 
 		var point = this._map.mouseEventToLayerPoint(e).subtract(this.getOffset());
-		this._handleMouseOut(e, point);
 		this._handleMouseHover(e, point);
 	},
 
