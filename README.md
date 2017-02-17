@@ -6,23 +6,16 @@
 Display gridded vector data (sliced [GeoJSON](http://geojson.org/), [TopoJSON](https://github.com/mbostock/topojson/wiki) or [protobuf vector tiles](https://github.com/mapbox/vector-tile-spec)) in [Leaflet](http://www.leafletjs.com) 1.0.0
 
 
+## Demos
 
-## Why
+|          |           |
+| ---      | ---       |
+| [`demo-geojson.html`](http://leaflet.github.io/Leaflet.VectorGrid/demo-geojson.html) | Sliced GeoJSON |
+| [`demo-topojson.html`](http://leaflet.github.io/Leaflet.VectorGrid/demo-topojson.html) | Sliced TopoJSON (sorry for the antimeridian mess, topojson-to-geojson seems to not handle it properly) |
+| [`demo-vectortiles.html`](http://leaflet.github.io/Leaflet.VectorGrid/demo-vectortiles.html) | Protobuf vector tiles from MapBox or OpenMapTiles |
+| [`demo-points.html`](http://leaflet.github.io/Leaflet.VectorGrid/demo-points.html) | Clickable points and lines |
+| [`demo-points-icons.html`](http://leaflet.github.io/Leaflet.VectorGrid/demo-points-icons.html) | Points as icons |
 
-Because neither Leaflet.MapboxVectorTile nor Hoverboard will work on Leaflet 1.
-
-
-## Demo
-
-With sliced GeoJSON: http://leaflet.github.io/Leaflet.VectorGrid/dist/demo/demo-geojson.html
-
-With sliced TopoJSON: http://leaflet.github.io/Leaflet.VectorGrid/dist/demo/demo-topojson.html (sorry for the antimeridian mess, topojson-to-geojson seems to not handle it properly)
-
-With protobuf `VectorTile`s: http://leaflet.github.io/Leaflet.VectorGrid/dist/demo/demo-vectortiles.html
-
-With clickable points and lines (from protobuf tiles): http://leaflet.github.io/Leaflet.VectorGrid/dist/demo/demo-points.html
-
-With points show as icons: http://leaflet.github.io/Leaflet.VectorGrid/dist/demo/demo-points-icons.html
 
 ## Using
 
@@ -219,6 +212,8 @@ Internally, Leaflet.VectorGrid uses two classes named `L.SVG.Tile` and `L.Canvas
 
 `L.VectorGrid.Protobuf` requires `vector-tile` and `pbf`: the global variables `VectorTile` and `Pbf` must exist.
 
+By default, VectorGrid is built with those dependencies bundled.
+
 ## Developing
 
 Run `npm install`.
@@ -229,6 +224,15 @@ Run `npm install`.
  * More `<g>`roups in SVG
  * Offscreen `<canvas>`es in Canvas
 * `getBounds()` support for the slicer (inherit/extrapolate from geojson data)
+* Parser for mapbox-like vector stylesheets
+
+## Motivation
+
+Before VectorGrid, loading vector tiles in Leaflet could only be done with the
+Leaflet.MapboxVectorTile or the Hoverboard plugin, but neither of those works with
+Leaflet 1.0.0 (or greater).
+
+VectorGrid leverages the GridLayer feature introduced in Leaflet 1.0.0.
 
 ## Legalese
 
