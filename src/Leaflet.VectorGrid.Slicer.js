@@ -28,7 +28,17 @@ import workerCode from './slicerWebWorker.js.worker';
  *
  * ```
  *
+ * `VectorGrid.Slicer` can also handle [TopoJSON](https://github.com/mbostock/topojson) transparently:
+ * ```js
+ * var layer = L.vectorGrid.slicer(topojson, options);
+ * ```
+ *
+ * The TopoJSON format [implicitly groups features into "objects"](https://github.com/mbostock/topojson-specification/blob/master/README.md#215-objects).
+ * These will be transformed into vector tile layer names when styling (the
+ * `vectorTileLayerName` option is ignored when using TopoJSON).
+ *
  */
+
 L.VectorGrid.Slicer = L.VectorGrid.extend({
 
 	options: {

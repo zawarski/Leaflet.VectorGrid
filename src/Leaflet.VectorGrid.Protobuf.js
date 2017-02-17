@@ -9,7 +9,7 @@ import {VectorTile} from 'vector-tile';
  * A `VectorGrid` for vector tiles fetched from the internet.
  * Tiles are supposed to be protobufs (AKA "protobuffer" or "Protocol Buffers"),
  * containing data which complies with the
- * [MapBox Vector Tile Specification](https://github.com/mapbox/vector-tile-spec/tree/master/2.1)
+ * [MapBox Vector Tile Specification](https://github.com/mapbox/vector-tile-spec/tree/master/2.1).
  *
  * This is the format used by:
  * - Mapbox Vector Tiles
@@ -19,23 +19,43 @@ import {VectorTile} from 'vector-tile';
  *
  * 🍂example
  *
+ * You must initialize a `VectorGrid.Protobuf` with a URL template, just like in
+ * `L.TileLayer`s. The difference is that the template must point to vector tiles
+ * (usually `.pbf` or `.mvt`) instead of raster (`.png` or `.jpg`) tiles, and that
+ * you should define the styling for all the features.
  *
+ * <br><br>
  *
  * For OpenMapTiles, with a key from [https://openmaptiles.org/docs/host/use-cdn/](https://openmaptiles.org/docs/host/use-cdn/),
  * initialization looks like this:
  *
  * ```
- * var omtKey = 'abcdefghi01234567890';
- * L.vectorGrid.protobuf("https://free-{s}.tilehosting.com/data/v3/{z}/{x}/{y}.pbf.pict?key=" + omtKey,{
+ * L.vectorGrid.protobuf("https://free-{s}.tilehosting.com/data/v3/{z}/{x}/{y}.pbf.pict?key={key}", {
  * 	vectorTileLayerStyles: { ... },
- * 	subdomains: "1234"
+ * 	subdomains: "0123",
+ * 	key: 'abcdefghi01234567890',
+ * 	maxNativeZoom: 14
  * }).addTo(map);
  * ```
  *
+ * And for Mapbox vector tiles, it looks like this:
+ *
+ * ```
+ * L.vectorGrid.protobuf("https://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/{z}/{x}/{y}.vector.pbf?access_token={token}", {
+ * 	vectorTileLayerStyles: { ... },
+ * 	subdomains: "abcd",
+ * 	token: "pk.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTS.TUVWXTZ0123456789abcde"
+ * }).addTo(map);
+ * ```
  */
 L.VectorGrid.Protobuf = L.VectorGrid.extend({
 
 	options: {
+		// 🍂section
+		// As with `L.TileLayer`, the URL template might contain a reference to
+		// any option (see the example above and note the `{key}` or `token` in the URL
+		// template, and the corresponding option).
+		//
 		// 🍂option subdomains: String = 'abc'
 		// Akin to the `subdomains` option for `L.TileLayer`.
 		subdomains: 'abc',	// Like L.TileLayer

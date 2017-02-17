@@ -112,6 +112,13 @@ var uglifiedBundledCode = src2uglified.transform('rollup', {
 
 var demo = gobble('demo').moveTo('demo');
 
+var leafdoc = src.transform('leafdoc', {
+	templateDir: 'leafdoc-templates',
+	output: 'vectorgrid-api-docs.html',
+	showInheritancesWhenEmpty: true,
+
+});
+
 // var leaflet = vendor.include([
 // 	'leaflet-src.js',
 // 	'leaflet-src.map',
@@ -125,6 +132,7 @@ module.exports = gobble([
 	uglifiedCode,       	// No extra deps,    minified
 	uglifiedBundledCode,	//    Extra deps,    minified
 
-	demo,
+// 	demo,
 // 	leaflet
+	leafdoc
 ]);

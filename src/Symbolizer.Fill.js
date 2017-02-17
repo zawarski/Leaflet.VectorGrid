@@ -1,7 +1,7 @@
 import { Symbolizer } from './Symbolizer.js'
 import { PolyBase } from './Symbolizer.PolyBase.js'
 
-// 🍂class LineSymbolizer
+// 🍂class FillSymbolizer
 // 🍂inherits Polyline
 // A symbolizer for filled areas. Applies only to polygon features.
 
