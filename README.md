@@ -12,7 +12,7 @@ Display gridded vector data (sliced [GeoJSON](http://geojson.org/), [TopoJSON](h
 | ---      | ---       |
 | [`demo-geojson.html`](http://leaflet.github.io/Leaflet.VectorGrid/demo-geojson.html) | Sliced GeoJSON |
 | [`demo-topojson.html`](http://leaflet.github.io/Leaflet.VectorGrid/demo-topojson.html) | Sliced TopoJSON (sorry for the antimeridian mess, topojson-to-geojson seems to not handle it properly) |
-| [`demo-vectortiles.html`](http://leaflet.github.io/Leaflet.VectorGrid/demo-vectortiles.html) | Protobuf vector tiles: OpenMapTiles, MapBox, or MapZen vector tiles |
+| [`demo-vectortiles.html`](http://leaflet.github.io/Leaflet.VectorGrid/demo-vectortiles.html) | Protobuf vector tiles: OpenMapTiles, MapBox, MapZen or even ESRI vector tiles |
 | [`demo-points.html`](http://leaflet.github.io/Leaflet.VectorGrid/demo-points.html) | Clickable points and lines |
 | [`demo-points-icons.html`](http://leaflet.github.io/Leaflet.VectorGrid/demo-points-icons.html) | Points as icons |
 

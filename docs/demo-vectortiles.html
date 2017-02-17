@@ -269,6 +269,93 @@
 
 
 
+		var esriStyle = {};
+		esriStyle.Continent  = vectorTileStyling.earth;
+		esriStyle.Bathymetry = vectorTileStyling.water;
+		esriStyle["Vegetation small scale"] = vectorTileStyling.landuse;
+		esriStyle["Marine area"] = vectorTileStyling.water;
+		esriStyle.Land = vectorTileStyling.earth;
+
+		esriStyle["City small scale"             ] = vectorTileStyling.building;
+		esriStyle["Admin0 point"                 ] = [];
+		esriStyle["Water area small scale"       ] = vectorTileStyling.water;
+		esriStyle["Water line small scale/label" ] = [];
+		esriStyle["Water line small scale"       ] = vectorTileStyling.water;
+		esriStyle["Marine waterbody/label"       ] = [];
+		esriStyle["Boundary line"                ] = vectorTileStyling.boundary;
+		esriStyle["Admin0 forest or park"        ] = vectorTileStyling.landuse;
+		esriStyle["Openspace or forest"          ] = vectorTileStyling.landuse;
+		esriStyle["Admin1 area/label"            ] = [];
+		esriStyle["Admin2 area/label"            ] = [];
+		esriStyle["Admin0 forest or park/label"  ] = [];
+		esriStyle["Water area small scale/label" ] = [];
+		esriStyle["Road tunnel"                  ] = vectorTileStyling.road;
+		esriStyle["Road"                         ] = vectorTileStyling.road;
+		esriStyle["Water line medium scale/label"] = [];
+		esriStyle["Water line medium scale"      ] = vectorTileStyling.water;
+		esriStyle["Urban area"                   ] = vectorTileStyling.landuse;
+		esriStyle["Admin1 forest or park"        ] = vectorTileStyling.landuse;
+		esriStyle["Water area medium scale/label"] = [];
+		esriStyle["Water area medium scale"      ] = vectorTileStyling.water;
+		esriStyle["Spot elevation"               ] = [];
+		esriStyle["City large scale"             ] = vectorTileStyling.building;
+		esriStyle["Admin2 area/label"            ] =
+		esriStyle["Water area large scale"       ] = vectorTileStyling.water;
+		esriStyle["Water line large scale/label" ] = [];
+		esriStyle["Water line large scale"       ] = vectorTileStyling.water;
+		esriStyle["Point of interest"            ] = vectorTileStyling.building;
+		esriStyle["Road/label"                   ] = [];
+		esriStyle["Ferry/label"                  ] = [];
+		esriStyle["Ferry"                        ] = vectorTileStyling.water;
+		esriStyle["Building"                     ] = vectorTileStyling.building;
+		esriStyle["Water area/label"             ] = [];
+		esriStyle["Water area"                   ] = vectorTileStyling.water;
+		esriStyle["Water line"                   ] = vectorTileStyling.water;
+		esriStyle["Cemetery/label"               ] = [];
+		esriStyle["Cemetery"                     ] = vectorTileStyling.landuse;
+		esriStyle["Retail"                       ] = vectorTileStyling.landuse;
+		esriStyle["Airport/label"                ] = [];
+		esriStyle["Airport"                      ] = vectorTileStyling.landuse;
+		esriStyle["Industry"                     ] = vectorTileStyling.landuse;
+		esriStyle["Water area large scale/label" ] = [];
+		esriStyle["Road tunnel/label"            ] = [];
+		esriStyle["Golf course/label"            ] = [];
+		esriStyle["Golf course"                  ] = vectorTileStyling.landuse;
+		esriStyle["Industry/label"               ] = [];
+		esriStyle["Marine area/label"            ] = [];
+		esriStyle["Railroad"                     ] = vectorTileStyling.road;
+		esriStyle["Medical"                      ] = vectorTileStyling.landuse;
+		esriStyle["Education"                    ] = vectorTileStyling.landuse;
+		esriStyle["Park or farming"              ] = vectorTileStyling.landuse;
+		esriStyle["Exit"                         ] = vectorTileStyling.road;
+		esriStyle["Retail/label"                 ] = [];
+		esriStyle["Beach/label"                  ] = [];
+		esriStyle["Beach"                        ] = vectorTileStyling.landuse;
+		esriStyle["Special area of interest"     ] = vectorTileStyling.housenumber;
+		esriStyle["Point of interest"            ] = vectorTileStyling.poi;
+		esriStyle["Education/label"              ] = [];
+		esriStyle["Landmark"                     ] = vectorTileStyling.landuse;
+		esriStyle["Cemetery"                     ] = vectorTileStyling.landuse;
+		esriStyle["Transportation"               ] = vectorTileStyling.road;
+		esriStyle["Landmark/label"               ] = [];
+		esriStyle["Medical/label"                ] = [];
+		esriStyle["Park or farming/label"        ] = [];
+		esriStyle["Building/label"               ] = [];
+
+
+
+
+
+		var esriTilesUrl = "https://basemaps.arcgis.com/v1/arcgis/rest/services/World_Basemap/VectorTileServer/tile/{z}/{y}/{x}.pbf";
+
+		var esriVectorTileOptions = {
+			rendererFactory: L.canvas.tile,
+			attribution: '© ESRI',
+			vectorTileLayerStyles: esriStyle,
+		};
+
+		var esriTilesPbfLayer = L.vectorGrid.protobuf(esriTilesUrl, esriVectorTileOptions);
+
 
 
 		map.setView({ lat: 47.040182144806664, lng: 9.667968750000002 }, 0);
@@ -277,7 +364,8 @@
 		L.control.layers({
 			OpenMapTiles: openmaptilesPbfLayer,
 			"MapBox Vector Tiles": mapboxPbfLayer,
-			"MapZen Vector Tiles": mapzenTilesPbfLayer
+			"MapZen Vector Tiles": mapzenTilesPbfLayer,
+			"ESRI basemap vector tiles": esriTilesPbfLayer
 		}, {}, {collapsed: false}).addTo(map);
 
 	</script>
