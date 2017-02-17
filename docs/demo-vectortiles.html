@@ -97,14 +97,14 @@
 				fillOpacity: 0.2,
 				opacity: 0.4
 			},
-			road: {
+			road: {	// mapbox only
 				weight: 1,
 				fillColor: '#f2b648',
 				color: '#f2b648',
 				fillOpacity: 0.2,
 				opacity: 0.4
 			},
-			tunnel: {
+			tunnel: {	// mapbox only
 				weight: 0.5,
 				fillColor: '#f2b648',
 				color: '#f2b648',
@@ -112,7 +112,15 @@
 				opacity: 0.4,
 // 					dashArray: [4, 4]
 			},
-			bridge: {
+			bridge: {	// mapbox only
+				weight: 0.5,
+				fillColor: '#f2b648',
+				color: '#f2b648',
+				fillOpacity: 0.2,
+				opacity: 0.4,
+// 					dashArray: [4, 4]
+			},
+			transportation: {	// openmaptiles only
 				weight: 0.5,
 				fillColor: '#f2b648',
 				color: '#f2b648',
@@ -165,34 +173,36 @@
 			},
 
 
+			// Do not symbolize some stuff for mapbox
 			country_label: [],
 			marine_label: [],
 			state_label: [],
 			place_label: [],
 			waterway_label: [],
-// 				landuse: [],
-			landuse_overlay: [],
-// 				road: [],
 			poi_label: [],
-// 				waterway: [],
-// 				aeroway: [],
-// 				tunnel: [],
-// 				bridge: [],
-			barrier_line: [],
-// 				building: [],
 			road_label: [],
 			housenum_label: [],
+
+
+			// Do not symbolize some stuff for openmaptiles
+			country_name: [],
+			marine_name: [],
+			state_name: [],
+			place_name: [],
+			waterway_name: [],
+			poi_name: [],
+			road_name: [],
+			housenum_name: [],
 		};
 
 
-
-
-		var mapboxUrl = 'https://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/{z}/{x}/{y}.vector.pbf?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
+		var mapboxUrl = "https://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/{z}/{x}/{y}.vector.pbf?access_token={token}";
 
 		var mapboxVectorTileOptions = {
 			rendererFactory: L.canvas.tile,
 			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://www.mapbox.com/about/maps/">MapBox</a>',
 			vectorTileLayerStyles: vectorTileStyling,
+			token: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw'
 		};
 
 
@@ -200,12 +210,15 @@
 
 
 
-		var openmaptilesUrl = 'https://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/{z}/{x}/{y}.vector.pbf?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
+		var openmaptilesUrl = "https://free-{s}.tilehosting.com/data/v3/{z}/{x}/{y}.pbf.pict?key={key}";
 
 		var openmaptilesVectorTileOptions = {
 			rendererFactory: L.canvas.tile,
-			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://www.mapbox.com/about/maps/">MapBox</a>',
+			attribution: '<a href="https://openmaptiles.org/">&copy; OpenMapTiles</a>, <a href="http://www.openstreetmap.org/copyright">&copy; OpenStreetMap</a> contributors',
 			vectorTileLayerStyles: vectorTileStyling,
+			subdomains: '0123',
+			key: 'UmmATPUongHdDmIicgs7',
+			maxZoom: 14
 		};
 
 
