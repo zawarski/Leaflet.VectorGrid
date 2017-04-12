@@ -1,3 +1,20 @@
+## 1.3.0 (TBD)
+
+* Build using Rollup; #29 by @IvanSanchez)
+* Remember overridden styles between draw calls; #38 by @perliedman)
+* Fix quirks in `setFeatureStyle`; #42 by @lediur)
+* Allow points to be styled as icons; #44 by @perliedman)
+* Support TMS URLs for protobuf tiles; #47 by @minus34)
+* Documentation for styling points as icons; #48 by @frodrigo
+* Fix race condition when a tile layer is removed before its tiles have loaded; #57 by @micahcatlin)
+* Fix handling of coordinates from GeoJSON points (#32); #62 by @vmeurisse
+* Use standard `for` loops in preference over `for...in` (#27); #70 by @perliedman
+* Clean up map's interactive targets when tiles are removed; #73 by @jkuebart
+* Make features, not tiles, accept pointer events for SVG renderer; #75 by @jkuebart
+* Simplification of style updates; #72 by @jkuebart
+* Port canvas mouse handling fixes from Leaflet `master` to canvas renderer; #78 by @jkuebart
+* Split `FeatureLayer` into `Symbolizers`; by @IvanSanchez
+* Add Leafdoc documentation; by @IvanSanchez
 
 ## 1.2.0
 
