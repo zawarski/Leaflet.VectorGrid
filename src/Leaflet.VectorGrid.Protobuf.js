@@ -58,11 +58,11 @@ L.VectorGrid.Protobuf = L.VectorGrid.extend({
 		//
 		// 🍂option subdomains: String = 'abc'
 		// Akin to the `subdomains` option for `L.TileLayer`.
-    subdomains: 'abc',	// Like L.TileLayer
-    //
-    // 🍂option fetchOptions: Object = {}
-    // options passed to `fetch`, e.g. {credentials: 'same-origin'} to send cookie for the current domain
-    fetchOptions: {}
+		subdomains: 'abc',	// Like L.TileLayer
+		//
+		// 🍂option fetchOptions: Object = {}
+		// options passed to `fetch`, e.g. {credentials: 'same-origin'} to send cookie for the current domain
+		fetchOptions: {}
 	},
 
 	initialize: function(url, options) {
@@ -92,7 +92,7 @@ L.VectorGrid.Protobuf = L.VectorGrid.extend({
 
 		var tileUrl = L.Util.template(this._url, L.extend(data, this.options));
 
-    return fetch(tileUrl, this.options.fetchOptions).then(function(response){
+		return fetch(tileUrl, this.options.fetchOptions).then(function(response){
 
 			if (!response.ok) {
 				return {layers:[]};
