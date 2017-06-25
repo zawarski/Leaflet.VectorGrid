@@ -72,6 +72,18 @@ L.VectorGrid.Protobuf = L.VectorGrid.extend({
 		L.VectorGrid.prototype.initialize.call(this, options);
 	},
 
+	// 🍂method setUrl(url: String, noRedraw?: Boolean): this
+	// Updates the layer's URL template and redraws it (unless `noRedraw` is set to `true`).
+	setUrl: function(url, noRedraw) {
+		this._url = url;
+
+		if (!noRedraw) {
+			this.redraw();
+		}
+
+		return this;
+	},
+
 	_getSubdomain: L.TileLayer.prototype._getSubdomain,
 
 	_getVectorTilePromise: function(coords) {
