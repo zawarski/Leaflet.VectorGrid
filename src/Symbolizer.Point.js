@@ -71,10 +71,10 @@ export var PointSymbolizer = L.CircleMarker.extend({
 	_getImage: function () {
 		if (this.options.icon) {
 			var url = this.options.icon.options.iconUrl,
-			    img = PointLayer.iconCache[url];
+			    img = PointSymbolizer.iconCache[url];
 			if (!img) {
 				var icon = this.options.icon;
-				img = PointLayer.iconCache[url] = icon.createIcon();
+				img = PointSymbolizer.iconCache[url] = icon.createIcon();
 			}
 			return img;
 		} else {
