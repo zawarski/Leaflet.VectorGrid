@@ -1,4 +1,4 @@
-## 1.3.0 (TBD)
+## 1.3.0 (2017-08-18)
 
 * Build using Rollup; #29 by @IvanSanchez)
 * Remember overridden styles between draw calls; #38 by @perliedman)
@@ -15,6 +15,9 @@
 * Port canvas mouse handling fixes from Leaflet `master` to canvas renderer; #78 by @jkuebart
 * Split `FeatureLayer` into `Symbolizers`; by @IvanSanchez
 * Add Leafdoc documentation; by @IvanSanchez
+* Add ability to specify options for `fetch`, adds cookie capability for example; #100 by @tlaitinen
+* Add `setUrl` method to `L.VectorGrid.Protobuf`; #105 by @frodrigo
+
 
 ## 1.2.0
 
