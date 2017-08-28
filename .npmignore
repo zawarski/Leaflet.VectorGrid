@@ -6,3 +6,5 @@ gobblefile.js
 aux
 .gobble
 .gobble-build
+yarn.lock
+demo

@@ -1,113 +1,239 @@
+import {} from './Leaflet.Renderer.SVG.Tile.js';
+import { PointSymbolizer } from './Symbolizer.Point.js';
+import { LineSymbolizer } from './Symbolizer.Line.js';
+import { FillSymbolizer } from './Symbolizer.Fill.js';
 
+/* 🍂class VectorGrid
+ * 🍂inherits GridLayer
+ *
+ * A `VectorGrid` is a generic, abstract class for displaying tiled vector data.
+ * it provides facilities for symbolizing and rendering the data in the vector
+ * tiles, but lacks the functionality to fetch the vector tiles from wherever
+ * they are.
+ *
+ * Extends Leaflet's `L.GridLayer`.
+ */
 
 L.VectorGrid = L.GridLayer.extend({
 
 	options: {
+		// 🍂option rendererFactory = L.svg.tile
+		// A factory method which will be used to instantiate the per-tile renderers.
 		rendererFactory: L.svg.tile,
-		vectorTileLayerStyles: {}
+
+		// 🍂option vectorTileLayerStyles: Object = {}
+		// A data structure holding initial symbolizer definitions for the vector features.
+		vectorTileLayerStyles: {},
+
+		// 🍂option interactive: Boolean = false
+		// Whether this `VectorGrid` fires `Interactive Layer` events.
+		interactive: false,
+
+		// 🍂option getFeatureId: Function = undefined
+		// A function that, given a vector feature, returns an unique identifier for it, e.g.
+		// `function(feat) { return feat.properties.uniqueIdField; }`.
+		// Must be defined for `setFeatureStyle` to work.
+	},
+
+	initialize: function(options) {
+		L.setOptions(this, options);
+		L.GridLayer.prototype.initialize.apply(this, arguments);
+		if (this.options.getFeatureId) {
+			this._vectorTiles = {};
+			this._overriddenStyles = {};
+			this.on('tileunload', function(e) {
+				var key = this._tileCoordsToKey(e.coords),
+				    tile = this._vectorTiles[key];
+
+				if (tile && this._map) {
+					tile.removeFrom(this._map);
+				}
+				delete this._vectorTiles[key];
+			}, this);
+		}
+		this._dataLayerNames = {};
 	},
 
 	createTile: function(coords, done) {
-		var renderer = this.options.rendererFactory(this.getTileSize(), this.options);
+		var storeFeatures = this.options.getFeatureId;
+
+		var tileSize = this.getTileSize();
+		var renderer = this.options.rendererFactory(coords, tileSize, this.options);
 
 		var vectorTilePromise = this._getVectorTilePromise(coords);
 
+		if (storeFeatures) {
+			this._vectorTiles[this._tileCoordsToKey(coords)] = renderer;
+			renderer._features = {};
+		}
 
-		vectorTilePromise.then( function(vectorTile) {
-
+		vectorTilePromise.then( function renderTile(vectorTile) {
 			for (var layerName in vectorTile.layers) {
+				this._dataLayerNames[layerName] = true;
 				var layer = vectorTile.layers[layerName];
 
-				/// NOTE: THIS ASSUMES SQUARE TILES!!!!!1!
-				var pxPerExtent = this.getTileSize().x / layer.extent;
+				var pxPerExtent = this.getTileSize().divideBy(layer.extent);
 
 				var layerStyle = this.options.vectorTileLayerStyles[ layerName ] ||
 				L.Path.prototype.options;
 
-				for (var i in layer.features) {
+				for (var i = 0; i < layer.features.length; i++) {
 					var feat = layer.features[i];
-					this._mkFeatureParts(feat, pxPerExtent);
+					var id;
 
-					/// Style can be a callback that is passed the feature's
-					/// properties and tile zoom level...
-					var styleOptions = (layerStyle instanceof Function) ?
-					layerStyle(feat.properties, coords.z) :
-					layerStyle;
+					var styleOptions = layerStyle;
+					if (storeFeatures) {
+						id = this.options.getFeatureId(feat);
+						var styleOverride = this._overriddenStyles[id];
+						if (styleOverride) {
+							if (styleOverride[layerName]) {
+								styleOptions = styleOverride[layerName];
+							} else {
+								styleOptions = styleOverride;
+							}
+						}
+					}
+
+					if (styleOptions instanceof Function) {
+						styleOptions = styleOptions(feat.properties, coords.z);
+					}
 
 					if (!(styleOptions instanceof Array)) {
 						styleOptions = [styleOptions];
 					}
 
-					/// Style can be an array of styles, for styling a feature
-					/// more than once...
-					for (var j in styleOptions) {
+					if (!styleOptions.length) {
+						continue;
+					}
+
+					var featureLayer = this._createLayer(feat, pxPerExtent);
+
+					for (var j = 0; j < styleOptions.length; j++) {
 						var style = L.extend({}, L.Path.prototype.options, styleOptions[j]);
+						featureLayer.render(renderer, style);
+						renderer._addPath(featureLayer);
+					}
 
-						if (feat.type === 1) { // Points
-							style.fill = false;
-						} else if (feat.type === 2) {	// Polyline
-							style.fill = false;
-						}
+					if (this.options.interactive) {
+						featureLayer.makeInteractive();
+					}
 
-						feat.options = style;
-						renderer._initPath( feat );
-						renderer._updateStyle( feat );
-
-						if (feat.type === 1) { // Points
-							// 							style.fill = false;
-						} else if (feat.type === 2) {	// Polyline
-							style.fill = false;
-							renderer._updatePoly(feat, false);
-						} else if (feat.type === 3) {	// Polygon
-							renderer._updatePoly(feat, true);
-						}
-
-						renderer._addPath( feat );
+					if (storeFeatures) {
+						renderer._features[id] = {
+							layerName: layerName,
+							feature: featureLayer
+						};
 					}
 				}
 
 			}
-			L.Util.requestAnimFrame(done);
+			if (this._map != null) {
+				renderer.addTo(this._map);
+			}
+			L.Util.requestAnimFrame(done.bind(coords, null, null));
 		}.bind(this));
 
 		return renderer.getContainer();
 	},
 
+	// 🍂method setFeatureStyle(id: Number, layerStyle: L.Path Options): this
+	// Given the unique ID for a vector features (as per the `getFeatureId` option),
+	// re-symbolizes that feature across all tiles it appears in.
+	setFeatureStyle: function(id, layerStyle) {
+		this._overriddenStyles[id] = layerStyle;
 
+		for (var tileKey in this._vectorTiles) {
+			var tile = this._vectorTiles[tileKey];
+			var features = tile._features;
+			var data = features[id];
+			if (data) {
+				var feat = data.feature;
 
-	// Fills up feat._parts based on the geometry and pxPerExtent,
-	// pretty much as L.Polyline._projectLatLngs and L.Polyline._clipPoints
-	// would do but simplified as the vectors are already simplified/clipped.
-	_mkFeatureParts: function(feat, pxPerExtent) {
-
-		var rings = feat.geometry;
-
-		feat._parts = [];
-		for (var i in rings) {
-			var ring = rings[i];
-			var part = [];
-			for (var j in ring) {
-				var coord = ring[j];
-				if ('x' in coord) {
-					// Protobuf vector tiles return {x: , y:}
-					part.push(L.point(coord.x * pxPerExtent, coord.y * pxPerExtent));
-				} else {
-					// Geojson-vt returns [,]
-					part.push(L.point(coord[0] * pxPerExtent, coord[1] * pxPerExtent));
+				var styleOptions = layerStyle;
+				if (layerStyle[data.layerName]) {
+					styleOptions = layerStyle[data.layerName];
 				}
-			}
-			feat._parts.push(part);
-		}
 
+				this._updateStyles(feat, tile, styleOptions);
+			}
+		}
+		return this;
 	},
 
+	// 🍂method setFeatureStyle(id: Number): this
+	// Reverts the effects of a previous `setFeatureStyle` call.
+	resetFeatureStyle: function(id) {
+		delete this._overriddenStyles[id];
+
+		for (var tileKey in this._vectorTiles) {
+			var tile = this._vectorTiles[tileKey];
+			var features = tile._features;
+			var data = features[id];
+			if (data) {
+				var feat = data.feature;
+				var styleOptions = this.options.vectorTileLayerStyles[ data.layerName ] ||
+				L.Path.prototype.options;
+				this._updateStyles(feat, tile, styleOptions);
+			}
+		}
+		return this;
+	},
+
+	// 🍂method getDataLayerNames(): Array
+	// Returns an array of strings, with all the known names of data layers in
+	// the vector tiles displayed. Useful for introspection.
+	getDataLayerNames: function() {
+		return Object.keys(this._dataLayerNames);
+	},
+
+	_updateStyles: function(feat, renderer, styleOptions) {
+		styleOptions = (styleOptions instanceof Function) ?
+			styleOptions(feat.properties, renderer.getCoord().z) :
+			styleOptions;
+
+		if (!(styleOptions instanceof Array)) {
+			styleOptions = [styleOptions];
+		}
+
+		for (var j = 0; j < styleOptions.length; j++) {
+			var style = L.extend({}, L.Path.prototype.options, styleOptions[j]);
+			feat.updateStyle(renderer, style);
+		}
+	},
+
+	_createLayer: function(feat, pxPerExtent, layerStyle) {
+		var layer;
+		switch (feat.type) {
+		case 1:
+			layer = new PointSymbolizer(feat, pxPerExtent);
+			break;
+		case 2:
+			layer = new LineSymbolizer(feat, pxPerExtent);
+			break;
+		case 3:
+			layer = new FillSymbolizer(feat, pxPerExtent);
+			break;
+		}
+
+		if (this.options.interactive) {
+			layer.addEventParent(this);
+		}
+
+		return layer;
+	},
 });
 
-
-
+/*
+ * 🍂section Extension methods
+ *
+ * Classes inheriting from `VectorGrid` **must** define the `_getVectorTilePromise` private method.
+ *
+ * 🍂method getVectorTilePromise(coords: Object): Promise
+ * Given a `coords` object in the form of `{x: Number, y: Number, z: Number}`,
+ * this function must return a `Promise` for a vector tile.
+ *
+ */
 L.vectorGrid = function (options) {
 	return new L.VectorGrid(options);
 };
-
-
 
