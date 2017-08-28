@@ -1,4 +1,4 @@
-## 1.3.0 (2017-08-18)
+## 1.3.0 (2017-08-28)
 
 * Build using Rollup (#29 by @IvanSanchez)
 * Remember overridden styles between draw calls (#38 by @perliedman)
