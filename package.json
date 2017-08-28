@@ -7,6 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublish": "node_modules/.bin/gobble build -f dist/",
     "build": "node_modules/.bin/gobble build -f dist/",
+    "lint": "eslint src",
+    "lintfix": "eslint --fix src",
     "start": "node_modules/.bin/gobble"
   },
   "keywords": [
@@ -28,6 +30,7 @@
     "url": "https://github.com/IvanSanchez/Leaflet.VectorGrid/issues"
   },
   "devDependencies": {
+    "eslint": "^4.5.0",
     "geojson-vt": "=2.2.0",
     "gobble": "=0.11.3",
     "gobble-cli": "=0.7.0",
