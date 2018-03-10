@@ -1,7 +1,7 @@
 ## 1.4.0 (2018-03-10)
 
 * Styling functions now receive the geomtry dimension as a third parameter (#130 by @tomchadwin).
-
+* Prevent non-current tiles from being processed and rendered (#131 by  @JamesMilnerUK)
 
 ## 1.3.0 (2017-08-28)
 

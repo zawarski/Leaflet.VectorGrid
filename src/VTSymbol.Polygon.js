@@ -1,13 +1,13 @@
-import { VTSymbol } from './VTSymbol.js'
-import { VTPolybase } from './VTPolybase.js'
+import  VTSymbol  from './VTSymbol.Symbol.js'
+import  VTPolybase from './VTSymbol.Polybase.js'
 
 // 🍂class VTPolygon
 // 🍂inherits Polyline
 // 🍂inherits VTSymbol
 // A symbolizer for filled areas. Applies only to polygon features.
 
-export const VTPolygon = L.Polygon.extend({
-	includes: [VTSymbol.prototype, PolyBase],
+const VTPolygon = L.Polygon.extend({
+	includes: [VTSymbol.prototype, VTPolybase],
 
 	initialize: function(feature, pxPerExtent) {
 		this.properties = feature.properties;
@@ -19,3 +19,5 @@ export const VTPolygon = L.Polygon.extend({
 		this._updatePath();
 	}
 });
+
+export default VTPolygon

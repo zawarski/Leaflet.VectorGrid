@@ -1,7 +1,12 @@
-import {} from './Leaflet.Renderer.SVG.Tile.js';
-import { PointSymbolizer } from './Symbolizer.Point.js';
-import { LineSymbolizer } from './Symbolizer.Line.js';
-import { FillSymbolizer } from './Symbolizer.Fill.js';
+// import {} from './Leaflet.Renderer.SVG.Tile.js';
+// import { PointSymbolizer } from './Symbolizer.Point.js';
+// import { LineSymbolizer } from './Symbolizer.Line.js';
+// import { FillSymbolizer } from './Symbolizer.Fill.js';
+
+import  CircleSymbolizer  from './Symbolizer.Circle.js';
+import  LineSymbolizer  from './Symbolizer.Line.js';
+import  PolygonSymbolizer from './Symbolizer.Polygon.js';
+import FunctionalSymbolizer from './Symbolizer.Functional.js';
 
 /* 🍂class VectorGrid
  * 🍂inherits GridLayer
@@ -32,7 +37,7 @@ L.VectorGrid = L.GridLayer.extend({
 		// By default, symbolizers are made out of the `vectorTileLayerStyles`
 		// option.
         // If specified, the vectorTileLayerStyles is not used.
-		getFeatureSymbolizers: L.VectorGrid.prototype._defaultGetFeatureSymbolizers,
+		getFeatureSymbolizers: undefined,
 
 		// 🍂option interactive: Boolean = false
 		// Whether this `VectorGrid` fires `Interactive Layer` events.
@@ -60,16 +65,21 @@ L.VectorGrid = L.GridLayer.extend({
 				delete this._vectorTiles[key];
 			}, this);
 		}
+
+		if (!this.options.getFeatureSymbolizers) {
+			this.options.getFeatureSymbolizers = this._defaultGetFeatureSymbolizers.bind(this);
+		}
+
 		this._dataLayerNames = {};
 	},
 
 	createTile: function(coords, done) {
-		var storeFeatures = this.options.getFeatureId;
+		const storeFeatures = this.options.getFeatureId;
 
-		var tileSize = this.getTileSize();
-		var renderer = this.options.rendererFactory(coords, tileSize, this.options);
+		const tileSize = this.getTileSize();
+		const renderer = this.options.rendererFactory(coords, tileSize, this.options);
 
-		var vectorTilePromise = this._getVectorTilePromise(coords);
+		const vectorTilePromise = this._getVectorTilePromise(coords);
 
 		if (storeFeatures) {
 			this._vectorTiles[this._tileCoordsToKey(coords)] = renderer;
@@ -77,11 +87,11 @@ L.VectorGrid = L.GridLayer.extend({
 		}
 
 		vectorTilePromise.then( function renderTile(vectorTile) {
-			for (var themeName in vectorTile.layers) {
+			for (const themeName in vectorTile.layers) {
 				this._dataLayerNames[themeName] = true;
-				var theme = vectorTile.layers[themeName];
+				const theme = vectorTile.layers[themeName];
 
-				var pxPerExtent = this.getTileSize().divideBy(theme.extent);
+				const pxPerExtent = this.getTileSize().divideBy(theme.extent);
 
 // 				var layerStyle = this.options.vectorTileLayerStyles[ themeName ] ||
 // 				L.Path.prototype.options;
@@ -89,6 +99,12 @@ L.VectorGrid = L.GridLayer.extend({
 				for (var i = 0; i < theme.features.length; i++) {
 					var feat = theme.features[i];
 					var id;
+
+					let symbolizer = this.options.getFeatureSymbolizers(
+						themeName, feat.properties, coords.z, feat.type
+					);
+
+					symbolizer.render(feat, pxPerExtent, renderer);
 
 // 					var styleOptions = layerStyle;
 // 					if (storeFeatures) {
@@ -210,7 +226,7 @@ L.VectorGrid = L.GridLayer.extend({
 		}
 	},
 
-	_defaultGetFeatureSymbolizers: function(theme, properties, zoomLevel, geometryDimension) {
+	_defaultGetFeatureSymbolizers: function(themeName, properties, zoomLevel, geometryDimension) {
 
 		const themeStyle = this.options.vectorTileLayerStyles[ themeName ] ||
 		                 L.Path.prototype.options;
@@ -218,10 +234,11 @@ L.VectorGrid = L.GridLayer.extend({
 		if (themeStyle instanceof Function) {
 			// Style is dynamic depending on each feature in this theme
 
-			return FunctionalSymbolizer(themeStyle, zoomLevel)
-			let symbolizerConstructor;
+			return new FunctionalSymbolizer(themeStyle, zoomLevel)
 
 		} else {
+			let symbolizerConstructor;
+
 			// Style is static for all features in this theme
 			if (geometryDimension === 1) {
 				symbolizerConstructor = CircleSymbolizer;

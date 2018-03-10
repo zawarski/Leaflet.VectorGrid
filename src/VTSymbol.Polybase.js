@@ -1,7 +1,7 @@
 
 // Contains mixins which are common to the Line VTSymbol and the Polygon VTSymbol.
 
-export const PolyBase = {
+const PolyBase = {
 	_makeFeatureParts: function(feat, pxPerExtent) {
 		var rings = feat.geometry;
 		var coord;
@@ -24,3 +24,5 @@ export const PolyBase = {
 		this._pxBounds = this._getPixelBounds();
 	}
 };
+
+export default PolyBase;

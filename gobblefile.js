@@ -114,7 +114,6 @@ var leafdoc = src.transform('leafdoc', {
 	templateDir: 'leafdoc-templates',
 	output: 'vectorgrid-api-docs.html',
 	showInheritancesWhenEmpty: true,
-
 });
 
 // var leaflet = vendor.include([
@@ -127,8 +126,8 @@ var leafdoc = src.transform('leafdoc', {
 module.exports = gobble([
 	builtCode,          	// No extra deps, no minified
 	bundledCode,        	//    Extra deps, no minified
-	uglifiedCode,       	// No extra deps,    minified
-	uglifiedBundledCode,	//    Extra deps,    minified
+// 	uglifiedCode,       	// No extra deps,    minified
+// 	uglifiedBundledCode,	//    Extra deps,    minified
 
 // 	leaflet
 	leafdoc

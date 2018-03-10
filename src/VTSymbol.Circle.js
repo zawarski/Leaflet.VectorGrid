@@ -1,12 +1,12 @@
-
-import { VTSymbol } from './VTSymbol.js'
-import { VTPolybase } from './VTPolybase.js'
+import  VTSymbol  from './VTSymbol.Symbol.js'
+import  VTPolybase  from './VTSymbol.Polybase.js'
 
 // 🍂class VTCircle
 // 🍂inherits VTSymbol
-// A VTSymbol for points, akin to `L.CircleMarker`.
+// 🍂inherits CircleMarker
+// A `VTSymbol` for points, akin to `L.CircleMarker`.
 
-export const VTCircle = L.CircleMarker.extend({
+const VTCircle = L.CircleMarker.extend({
 	includes: VTSymbol.prototype,
 
 	statics: {
@@ -71,10 +71,10 @@ export const VTCircle = L.CircleMarker.extend({
 	_getImage: function () {
 		if (this.options.icon) {
 			var url = this.options.icon.options.iconUrl,
-			    img = PointSymbolizer.iconCache[url];
+			    img = VTCircle.iconCache[url];
 			if (!img) {
 				var icon = this.options.icon;
-				img = PointSymbolizer.iconCache[url] = icon.createIcon();
+				img = VTCircle.iconCache[url] = icon.createIcon();
 			}
 			return img;
 		} else {
@@ -93,3 +93,4 @@ export const VTCircle = L.CircleMarker.extend({
 	}
 });
 
+export default VTCircle

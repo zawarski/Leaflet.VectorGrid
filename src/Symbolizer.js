@@ -2,7 +2,7 @@
 
 // Abstract class.
 
-export default const Symbolizer = L.Class.extend({
+const Symbolizer = L.Class.extend({
 
 	// Renders/symbolizes the given vector tile feature into the given renderer with
 	// the given pxPerExtent ratio. This is called once per vector tile feature.
@@ -10,22 +10,22 @@ export default const Symbolizer = L.Class.extend({
 	// is up to each concrete subclass.
 	// All subclasses might provide their own implementation. It's OK for a
 	// symbolizer to not render anything.
-	render: function(vtFeature, pxPerExtent, renderer) {}
+	render: function(vtFeature, pxPerExtent, renderer) {},
 
 	// Adds zero or more `L.Layer`s to the given layergroup.
 	// All subclasses might provide their own implementation. It's OK for a
 	// symbolizer to not add any layers.
-	addLayers: function(vtFeature, layergroup) {}
+	addLayers: function(vtFeature, layergroup) {},
 
 	// Utility. Renders the given VTSymbol into the given renderer,
 	// reassigning the given styles to the VTSymbol and rendering
 	// each style just once.
 	_renderSymbolWithStyles: function(vtSymbol, renderer, styles) {
 		for (let i = 0, l= styles.length ; i < l; i++) {
-			vtSymbol.render(renderer, style);
+			vtSymbol.render(renderer, styles[i]);
 			renderer._addPath(vtSymbol);
 		}
-	}
+	},
 
 	// Given an `Array` of `L.Path` styles, return an array of `L.Path` styles,
 	// each of which includes all the defaults.
@@ -35,3 +35,4 @@ export default const Symbolizer = L.Class.extend({
 
 });
 
+export default Symbolizer

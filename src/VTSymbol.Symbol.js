@@ -11,7 +11,7 @@
 // A vector tile *feature* might be symbolized as zero, one, or more *symbols*.
 // The actual symbolizers applied will depend on filters and the symbolizer functions or the vectorTileLayerStyles options.
 
-export const VTSymbol = L.Class.extend({
+const VTSymbol = L.Class.extend({
 	// 🍂method initialize(feature: VTFeature, pxPerExtent: Number)
 	// Initializes a new VTSymbol given a GeoJSON feature and the
 	// pixel-to-coordinate-units ratio. Internal use only.
@@ -55,3 +55,4 @@ export const VTSymbol = L.Class.extend({
 	_clickTolerance: L.Path.prototype._clickTolerance,
 });
 
+export default VTSymbol;

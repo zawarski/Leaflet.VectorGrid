@@ -1,11 +1,11 @@
-import { VTPolygon } from './VTPolygon.js'
-import { Symbolizer } from './Symbolizer.js'
+import VTPolygon  from './VTSymbol.Polygon.js'
+import Symbolizer  from './Symbolizer.js'
 
-export default const CircleSymbolizer = Symbolizer.extend({
+const CircleSymbolizer = Symbolizer.extend({
 
 	initialize: function(polygonStyles) {
 		this._polygonStyles = this._extendStylesWithDefaults(polygonStyles);
-	}
+	},
 
 	// The render function for PolygonSymbolizers does not need
 	// to handle the layergroup.
@@ -20,3 +20,5 @@ export default const CircleSymbolizer = Symbolizer.extend({
 	}
 
 });
+
+export default CircleSymbolizer

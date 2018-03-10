@@ -1,11 +1,11 @@
-import { VTCircle } from './VTCircle.js'
-import { Symbolizer } from './Symbolizer.js'
+import  VTCircle  from './VTSymbol.Circle.js'
+import  Symbolizer  from './Symbolizer.js'
 
-export default const CircleSymbolizer = Symbolizer.extend({
+const CircleSymbolizer = Symbolizer.extend({
 
 	initialize: function(circleStyles) {
 		this._circleStyles = this._extendStylesWithDefaults(circleStyles);
-	}
+	},
 
 	// The render function for CircleSymbolizers does not need
 	// to handle the layergroup.
@@ -20,3 +20,5 @@ export default const CircleSymbolizer = Symbolizer.extend({
 	}
 
 });
+
+export default CircleSymbolizer
