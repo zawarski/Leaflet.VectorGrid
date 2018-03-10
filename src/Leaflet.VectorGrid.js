@@ -25,6 +25,15 @@ L.VectorGrid = L.GridLayer.extend({
 		// A data structure holding initial symbolizer definitions for the vector features.
 		vectorTileLayerStyles: {},
 
+		// 🍂option getFeatureSymbolizers: Function
+		// A function that runs for every vector tile feature (receiving
+		// `(theme, properties, zoomLevel, geometryDimension)`, and must
+		// return an `Array` of `Symbolizer`s.
+		// By default, symbolizers are made out of the `vectorTileLayerStyles`
+		// option.
+        // If specified, the vectorTileLayerStyles is not used.
+		getFeatureSymbolizers: L.VectorGrid.prototype._defaultGetFeatureSymbolizers,
+
 		// 🍂option interactive: Boolean = false
 		// Whether this `VectorGrid` fires `Interactive Layer` events.
 		interactive: false,
@@ -64,66 +73,66 @@ L.VectorGrid = L.GridLayer.extend({
 
 		if (storeFeatures) {
 			this._vectorTiles[this._tileCoordsToKey(coords)] = renderer;
-			renderer._features = {};
+			renderer._symbols = {};
 		}
 
 		vectorTilePromise.then( function renderTile(vectorTile) {
-			for (var layerName in vectorTile.layers) {
-				this._dataLayerNames[layerName] = true;
-				var layer = vectorTile.layers[layerName];
+			for (var themeName in vectorTile.layers) {
+				this._dataLayerNames[themeName] = true;
+				var theme = vectorTile.layers[themeName];
 
-				var pxPerExtent = this.getTileSize().divideBy(layer.extent);
+				var pxPerExtent = this.getTileSize().divideBy(theme.extent);
 
-				var layerStyle = this.options.vectorTileLayerStyles[ layerName ] ||
-				L.Path.prototype.options;
+// 				var layerStyle = this.options.vectorTileLayerStyles[ themeName ] ||
+// 				L.Path.prototype.options;
 
-				for (var i = 0; i < layer.features.length; i++) {
-					var feat = layer.features[i];
+				for (var i = 0; i < theme.features.length; i++) {
+					var feat = theme.features[i];
 					var id;
 
-					var styleOptions = layerStyle;
-					if (storeFeatures) {
-						id = this.options.getFeatureId(feat);
-						var styleOverride = this._overriddenStyles[id];
-						if (styleOverride) {
-							if (styleOverride[layerName]) {
-								styleOptions = styleOverride[layerName];
-							} else {
-								styleOptions = styleOverride;
-							}
-						}
-					}
-
-					if (styleOptions instanceof Function) {
-						styleOptions = styleOptions(feat.properties, coords.z);
-					}
-
-					if (!(styleOptions instanceof Array)) {
-						styleOptions = [styleOptions];
-					}
-
-					if (!styleOptions.length) {
-						continue;
-					}
-
-					var featureLayer = this._createLayer(feat, pxPerExtent);
-
-					for (var j = 0; j < styleOptions.length; j++) {
-						var style = L.extend({}, L.Path.prototype.options, styleOptions[j]);
-						featureLayer.render(renderer, style);
-						renderer._addPath(featureLayer);
-					}
-
-					if (this.options.interactive) {
-						featureLayer.makeInteractive();
-					}
-
-					if (storeFeatures) {
-						renderer._features[id] = {
-							layerName: layerName,
-							feature: featureLayer
-						};
-					}
+// 					var styleOptions = layerStyle;
+// 					if (storeFeatures) {
+// 						id = this.options.getFeatureId(feat);
+// 						var styleOverride = this._overriddenStyles[id];
+// 						if (styleOverride) {
+// 							if (styleOverride[themeName]) {
+// 								styleOptions = styleOverride[themeName];
+// 							} else {
+// 								styleOptions = styleOverride;
+// 							}
+// 						}
+// 					}
+//
+// 					if (styleOptions instanceof Function) {
+// 						styleOptions = styleOptions(feat.properties, coords.z);
+// 					}
+//
+// 					if (!(styleOptions instanceof Array)) {
+// 						styleOptions = [styleOptions];
+// 					}
+//
+// 					if (!styleOptions.length) {
+// 						continue;
+// 					}
+//
+// 					var vtSymbol = this._createLayer(feat, pxPerExtent);
+//
+// 					for (var j = 0; j < styleOptions.length; j++) {
+// 						var style = L.extend({}, L.Path.prototype.options, styleOptions[j]);
+// 						vtSymbol.render(renderer, style);
+// 						renderer._addPath(vtSymbol);
+// 					}
+//
+// 					if (this.options.interactive) {
+// 						vtSymbol.makeInteractive();
+// 					}
+//
+// 					if (storeFeatures) {
+// 						renderer._symbols[id] = {
+// 							themeName: themeName,
+// 							feature: vtSymbol
+// 						};
+// 					}
 				}
 
 			}
@@ -144,14 +153,14 @@ L.VectorGrid = L.GridLayer.extend({
 
 		for (var tileKey in this._vectorTiles) {
 			var tile = this._vectorTiles[tileKey];
-			var features = tile._features;
+			var features = tile._symbols;
 			var data = features[id];
 			if (data) {
 				var feat = data.feature;
 
 				var styleOptions = layerStyle;
-				if (layerStyle[data.layerName]) {
-					styleOptions = layerStyle[data.layerName];
+				if (layerStyle[data.themeName]) {
+					styleOptions = layerStyle[data.themeName];
 				}
 
 				this._updateStyles(feat, tile, styleOptions);
@@ -167,11 +176,11 @@ L.VectorGrid = L.GridLayer.extend({
 
 		for (var tileKey in this._vectorTiles) {
 			var tile = this._vectorTiles[tileKey];
-			var features = tile._features;
+			var features = tile._symbols;
 			var data = features[id];
 			if (data) {
 				var feat = data.feature;
-				var styleOptions = this.options.vectorTileLayerStyles[ data.layerName ] ||
+				var styleOptions = this.options.vectorTileLayerStyles[ data.themeName ] ||
 				L.Path.prototype.options;
 				this._updateStyles(feat, tile, styleOptions);
 			}
@@ -201,26 +210,65 @@ L.VectorGrid = L.GridLayer.extend({
 		}
 	},
 
-	_createLayer: function(feat, pxPerExtent, layerStyle) {
-		var layer;
-		switch (feat.type) {
-		case 1:
-			layer = new PointSymbolizer(feat, pxPerExtent);
-			break;
-		case 2:
-			layer = new LineSymbolizer(feat, pxPerExtent);
-			break;
-		case 3:
-			layer = new FillSymbolizer(feat, pxPerExtent);
-			break;
+	_defaultGetFeatureSymbolizers: function(theme, properties, zoomLevel, geometryDimension) {
+
+		const themeStyle = this.options.vectorTileLayerStyles[ themeName ] ||
+		                 L.Path.prototype.options;
+
+		if (themeStyle instanceof Function) {
+			// Style is dynamic depending on each feature in this theme
+
+			return FunctionalSymbolizer(themeStyle, zoomLevel)
+			let symbolizerConstructor;
+
+		} else {
+			// Style is static for all features in this theme
+			if (geometryDimension === 1) {
+				symbolizerConstructor = CircleSymbolizer;
+			} else if (geometryDimension === 2){
+				symbolizerConstructor = LineSymbolizer;
+			} else if (geometryDimension === 3) {
+				symbolizerConstructor = PolygonSymbolizer;
+			} else {
+				throw new Error("Vector tile feature has a non-valid dimension (1 for point, 2 for line, 3 for polygon)");
+			}
+
+			if (!(themeStyle instanceof Array)) {
+				themeStyle = [themeStyle];
+			}
+
+			if (!themeStyle.length) {
+				// Return a null symbolizer - calls to render() and addLayers()
+				// will do nothing.
+				return new Symbolizer();
+			}
+
+			return new symbolizerConstructor(themeStyle);
 		}
 
-		if (this.options.interactive) {
-			layer.addEventParent(this);
-		}
-
-		return layer;
 	},
+
+// 	// Default symbolizer function - given a VTFeature,
+// 	_createLayer: function(feat, pxPerExtent) {
+// 		var layer;
+// 		switch (feat.type) {
+// 		case 1:
+// 			layer = new PointSymbolizer(feat, pxPerExtent);
+// 			break;
+// 		case 2:
+// 			layer = new LineSymbolizer(feat, pxPerExtent);
+// 			break;
+// 		case 3:
+// 			layer = new FillSymbolizer(feat, pxPerExtent);
+// 			break;
+// 		}
+//
+// 		if (this.options.interactive) {
+// 			layer.addEventParent(this);
+// 		}
+//
+// 		return layer;
+// 	},
 });
 
 /*

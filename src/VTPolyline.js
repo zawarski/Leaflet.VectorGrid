@@ -1,13 +1,13 @@
+import { VTSymbol } from './VTSymbol.js'
+import { VTPolybase } from './VTPolybase.js'
 
-import { Symbolizer } from './Symbolizer.js'
-import { PolyBase } from './Symbolizer.PolyBase.js'
-
-// 🍂class LineSymbolizer
+// 🍂class VTPolyline
 // 🍂inherits Polyline
+// 🍂inherits VTSymbol
 // A symbolizer for lines. Can be applied to line and polygon features.
 
-export var LineSymbolizer = L.Polyline.extend({
-	includes: [Symbolizer.prototype, PolyBase],
+export const VTPolyline = L.Polyline.extend({
+	includes: [VTSymbol.prototype, PolyBase],
 
 	initialize: function(feature, pxPerExtent) {
 		this.properties = feature.properties;
@@ -16,13 +16,13 @@ export var LineSymbolizer = L.Polyline.extend({
 
 	render: function(renderer, style) {
 		style.fill = false;
-		Symbolizer.prototype.render.call(this, renderer, style);
+		VTSymbol.prototype.render.call(this, renderer, style);
 		this._updatePath();
 	},
 
 	updateStyle: function(renderer, style) {
 		style.fill = false;
-		Symbolizer.prototype.updateStyle.call(this, renderer, style);
+		VTSymbol.prototype.updateStyle.call(this, renderer, style);
 	},
 });
 

@@ -1,12 +1,13 @@
-import { Symbolizer } from './Symbolizer.js'
-import { PolyBase } from './Symbolizer.PolyBase.js'
+import { VTSymbol } from './VTSymbol.js'
+import { VTPolybase } from './VTPolybase.js'
 
-// 🍂class FillSymbolizer
+// 🍂class VTPolygon
 // 🍂inherits Polyline
+// 🍂inherits VTSymbol
 // A symbolizer for filled areas. Applies only to polygon features.
 
-export var FillSymbolizer = L.Polygon.extend({
-	includes: [Symbolizer.prototype, PolyBase],
+export const VTPolygon = L.Polygon.extend({
+	includes: [VTSymbol.prototype, PolyBase],
 
 	initialize: function(feature, pxPerExtent) {
 		this.properties = feature.properties;
@@ -14,7 +15,7 @@ export var FillSymbolizer = L.Polygon.extend({
 	},
 
 	render: function(renderer, style) {
-		Symbolizer.prototype.render.call(this, renderer, style);
+		VTSymbol.prototype.render.call(this, renderer, style);
 		this._updatePath();
 	}
 });

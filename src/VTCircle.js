@@ -1,13 +1,13 @@
 
-import { Symbolizer } from './Symbolizer.js'
-import { PolyBase } from './Symbolizer.PolyBase.js'
+import { VTSymbol } from './VTSymbol.js'
+import { VTPolybase } from './VTPolybase.js'
 
-// 🍂class PointSymbolizer
-// 🍂inherits CircleMarker
-// A symbolizer for points.
+// 🍂class VTCircle
+// 🍂inherits VTSymbol
+// A VTSymbol for points, akin to `L.CircleMarker`.
 
-export var PointSymbolizer = L.CircleMarker.extend({
-	includes: Symbolizer.prototype,
+export const VTCircle = L.CircleMarker.extend({
+	includes: VTSymbol.prototype,
 
 	statics: {
 		iconCache: {}
@@ -19,7 +19,7 @@ export var PointSymbolizer = L.CircleMarker.extend({
 	},
 
 	render: function(renderer, style) {
-		Symbolizer.prototype.render.call(this, renderer, style);
+		VTSymbol.prototype.render.call(this, renderer, style);
 		this._radius = style.radius || L.CircleMarker.prototype.options.radius;
 		this._updatePath();
 	},
@@ -44,7 +44,7 @@ export var PointSymbolizer = L.CircleMarker.extend({
 	updateStyle: function(renderer, style) {
 		this._radius = style.radius || this._radius;
 		this._updateBounds();
-		return Symbolizer.prototype.updateStyle.call(this, renderer, style);
+		return VTSymbol.prototype.updateStyle.call(this, renderer, style);
 	},
 
 	_updateBounds: function() {

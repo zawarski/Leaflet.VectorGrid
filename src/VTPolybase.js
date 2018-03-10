@@ -1,7 +1,7 @@
 
-// Contains mixins which are common to the Line Symbolizer and the Fill Symbolizer.
+// Contains mixins which are common to the Line VTSymbol and the Polygon VTSymbol.
 
-export var PolyBase = {
+export const PolyBase = {
 	_makeFeatureParts: function(feat, pxPerExtent) {
 		var rings = feat.geometry;
 		var coord;
