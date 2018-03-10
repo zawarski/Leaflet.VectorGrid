@@ -95,7 +95,7 @@ L.VectorGrid = L.GridLayer.extend({
 					}
 
 					if (styleOptions instanceof Function) {
-						styleOptions = styleOptions(feat.properties, coords.z);
+						styleOptions = styleOptions(feat.properties, coords.z, feat.type);
 					}
 
 					if (!(styleOptions instanceof Array)) {
@@ -188,7 +188,7 @@ L.VectorGrid = L.GridLayer.extend({
 
 	_updateStyles: function(feat, renderer, styleOptions) {
 		styleOptions = (styleOptions instanceof Function) ?
-			styleOptions(feat.properties, renderer.getCoord().z) :
+			styleOptions(feat.properties, renderer.getCoord().z, feat.type) :
 			styleOptions;
 
 		if (!(styleOptions instanceof Array)) {
