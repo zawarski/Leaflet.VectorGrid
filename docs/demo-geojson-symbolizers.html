@@ -89,7 +89,7 @@
 
 		var vectorGrid = L.vectorGrid.slicer( euCountries, {
 			rendererFactory: L.svg.tile,
-			getFeatureSymbolizers: function(themeName, properties, zoom, geometryDimension) {
+			getFeatureSymbolizer: function(themeName, properties, zoom, geometryDimension) {
 				var p = properties.mapcolor7 % 5;
 
 				return countrySymbolizer[p];

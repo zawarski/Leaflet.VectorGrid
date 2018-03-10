@@ -1,6 +1,17 @@
 import  VTCircle  from './VTSymbol.Circle.js'
 import  Symbolizer  from './Symbolizer.js'
 
+
+// 🍂class CircleSymbolizer
+// 🍂inherits Symbolizer
+//
+// A `CircleSymbolizer` converts `vector-tile` features into `VTCircle`s.
+
+// 🍂factory L.vectorGrid.circleSymbolizer(styles: Array)
+// Creates a new Circle Symbolizer. The only parameter is an array of style
+// objects, as per `L.Circle`.
+
+
 const CircleSymbolizer = Symbolizer.extend({
 
 	initialize: function(circleStyles) {

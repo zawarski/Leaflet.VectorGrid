@@ -1,7 +1,16 @@
 import VTPolygon  from './VTSymbol.Polygon.js'
 import Symbolizer  from './Symbolizer.js'
 
-const CircleSymbolizer = Symbolizer.extend({
+// 🍂class PolygonSymbolizer
+// 🍂inherits Symbolizer
+//
+// A `PolygonSymbolizer` converts `vector-tile` features into `VTPolygon`s.
+
+// 🍂factory L.vectorGrid.polygonSymbolizer(styles: Array)
+// Creates a new Polygon Symbolizer. The only parameter is an array of style
+// objects, as per `L.Polygon`.
+
+const PolygonSymbolizer = Symbolizer.extend({
 
 	initialize: function(polygonStyles) {
 		this._polygonStyles = this._extendStylesWithDefaults(polygonStyles);

@@ -2,6 +2,15 @@
 import VTPolybase  from './VTSymbol.Polyline.js'
 import Symbolizer  from './Symbolizer.js'
 
+// 🍂class LineSymbolizer
+// 🍂inherits Symbolizer
+//
+// A `LineSymbolizer` converts `vector-tile` features into `VTPolyline`s.
+
+// 🍂factory L.vectorGrid.lineSymbolizer(styles: Array)
+// Creates a new Line Symbolizer. The only parameter is an array of style
+// objects, as per `L.Polyline`.
+
 const LineSymbolizer = Symbolizer.extend({
 
 	initialize: function(lineStyles) {

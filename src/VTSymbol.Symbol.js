@@ -13,7 +13,7 @@
 
 const VTSymbol = L.Class.extend({
 	// 🍂method initialize(feature: VTFeature, pxPerExtent: Number)
-	// Initializes a new VTSymbol given a GeoJSON feature and the
+	// Initializes a new VTSymbol given a `vector-tile` feature and the
 	// pixel-to-coordinate-units ratio. Internal use only.
 
 	// 🍂method render(renderer, style)

@@ -30,14 +30,14 @@ L.VectorGrid = L.GridLayer.extend({
 		// A data structure holding initial symbolizer definitions for the vector features.
 		vectorTileLayerStyles: {},
 
-		// 🍂option getFeatureSymbolizers: Function
+		// 🍂option getFeatureSymbolizer: Function
 		// A function that runs for every vector tile feature (receiving
 		// `(theme, properties, zoomLevel, geometryDimension)`, and must
 		// return an `Array` of `Symbolizer`s.
-		// By default, symbolizers are made out of the `vectorTileLayerStyles`
+		// By default, symbolizers are created from the `vectorTileLayerStyles`
 		// option.
         // If specified, the vectorTileLayerStyles is not used.
-		getFeatureSymbolizers: undefined,
+		getFeatureSymbolizer: undefined,
 
 		// 🍂option interactive: Boolean = false
 		// Whether this `VectorGrid` fires `Interactive Layer` events.
@@ -66,8 +66,8 @@ L.VectorGrid = L.GridLayer.extend({
 			}, this);
 		}
 
-		if (!this.options.getFeatureSymbolizers) {
-			this.options.getFeatureSymbolizers = this._defaultGetFeatureSymbolizers.bind(this);
+		if (!this.options.getFeatureSymbolizer) {
+			this.options.getFeatureSymbolizer = this._defaultGetFeatureSymbolizer.bind(this);
 		}
 
 		this._dataLayerNames = {};
@@ -100,12 +100,6 @@ L.VectorGrid = L.GridLayer.extend({
 					var feat = theme.features[i];
 					var id;
 
-					let symbolizer = this.options.getFeatureSymbolizers(
-						themeName, feat.properties, coords.z, feat.type
-					);
-
-					symbolizer.render(feat, pxPerExtent, renderer);
-
 // 					var styleOptions = layerStyle;
 // 					if (storeFeatures) {
 // 						id = this.options.getFeatureId(feat);
@@ -118,27 +112,14 @@ L.VectorGrid = L.GridLayer.extend({
 // 							}
 // 						}
 // 					}
-//
-// 					if (styleOptions instanceof Function) {
-// 						styleOptions = styleOptions(feat.properties, coords.z);
-// 					}
-//
-// 					if (!(styleOptions instanceof Array)) {
-// 						styleOptions = [styleOptions];
-// 					}
-//
-// 					if (!styleOptions.length) {
-// 						continue;
-// 					}
-//
-// 					var vtSymbol = this._createLayer(feat, pxPerExtent);
-//
-// 					for (var j = 0; j < styleOptions.length; j++) {
-// 						var style = L.extend({}, L.Path.prototype.options, styleOptions[j]);
-// 						vtSymbol.render(renderer, style);
-// 						renderer._addPath(vtSymbol);
-// 					}
-//
+
+
+					let symbolizer = this.options.getFeatureSymbolizer(
+						themeName, feat.properties, coords.z, feat.type
+					);
+
+					symbolizer.render(feat, pxPerExtent, renderer);
+
 // 					if (this.options.interactive) {
 // 						vtSymbol.makeInteractive();
 // 					}
@@ -226,9 +207,9 @@ L.VectorGrid = L.GridLayer.extend({
 		}
 	},
 
-	_defaultGetFeatureSymbolizers: function(themeName, properties, zoomLevel, geometryDimension) {
+	_defaultGetFeatureSymbolizer: function(themeName, properties, zoomLevel, geometryDimension) {
 
-		const themeStyle = this.options.vectorTileLayerStyles[ themeName ] ||
+		let themeStyle = this.options.vectorTileLayerStyles[ themeName ] ||
 		                 L.Path.prototype.options;
 
 		if (themeStyle instanceof Function) {

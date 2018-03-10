@@ -1,6 +1,48 @@
 
 
-// Abstract class.
+// 🍂class Symbolizer
+// 🍂inherits Class
+//
+// A `Symbolizer` provides a way to convert a `vector-tile` feature
+// into zero or more `VTSymbol`s and zero or more `L.Layer`s.
+//
+// This is important for the `getFeatureSymbolizer` option of `VectorGrid`:
+// The return value of that function must always be a `Symbolizer.`
+//
+// `Symbolizer`s should be created just once, and reused through
+// features that should look the same.
+//
+// The base `Symbolizer` renders nothing (creates zero `VTSymbol`s, and
+// zero `L.Layer`s for any input feature).
+//
+// 🍂example
+//
+// var myCircleSymbolizer = new L.VectorGrid.CircleSymbolizer([circleOptions]);
+// var redLineSymbolizer = new L.VectorGrid.LineSymbolizer([{ color: 'red' }]);
+// var blueLineSymbolizer = new L.VectorGrid.LineSymbolizer([{ color: 'blue' }]);
+//
+// var grid = L.vectorGrid.slicer( geoJsonData, {
+// 	getFeatureSymbolizer: function(
+// 		themeName, properties, zoom, geometryDimension
+// 	) {
+//
+// 		if (geometryDimension === 1) {
+// 			// Geometry dimension 1 means "Point"
+// 			return myCircleSymbolizer;
+// 		}
+//
+// 		// For lines and polygons, use red lines or blue lines depending on
+// 		// e.g. a feature property.
+// 		if (properties.something > 0) {
+// 			return redLineSymbolizer;
+// 		} else {
+// 			return blueLineSymbolizer;
+// 		}
+// 	}
+// } ).addTo(Map);
+//
+//
+
 
 const Symbolizer = L.Class.extend({
 
