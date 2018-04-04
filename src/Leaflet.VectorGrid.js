@@ -61,7 +61,7 @@ L.VectorGrid = L.GridLayer.extend({
 		var tileSize = this.getTileSize();
 		var renderer = this.options.rendererFactory(coords, tileSize, this.options);
 
-		var tileBounds = this._tileCoordsToBounds(coords);	
+		var tileBounds = this._tileCoordsToBounds(coords);
 
 		var vectorTilePromise = this._getVectorTilePromise(coords, tileBounds);
 
@@ -77,16 +77,16 @@ L.VectorGrid = L.GridLayer.extend({
 				for (var layerName in vectorTile.layers) {
 					this._dataLayerNames[layerName] = true;
 					var layer = vectorTile.layers[layerName];
-	
+
 					var pxPerExtent = this.getTileSize().divideBy(layer.extent);
-	
+
 					var layerStyle = this.options.vectorTileLayerStyles[ layerName ] ||
 					L.Path.prototype.options;
-	
+
 					for (var i = 0; i < layer.features.length; i++) {
 						var feat = layer.features[i];
 						var id;
-	
+
 						var styleOptions = layerStyle;
 						if (storeFeatures) {
 							id = this.options.getFeatureId(feat);
@@ -99,31 +99,31 @@ L.VectorGrid = L.GridLayer.extend({
 								}
 							}
 						}
-	
+
 						if (styleOptions instanceof Function) {
 							styleOptions = styleOptions(feat.properties, coords.z);
 						}
-	
+
 						if (!(styleOptions instanceof Array)) {
 							styleOptions = [styleOptions];
 						}
-	
+
 						if (!styleOptions.length) {
 							continue;
 						}
-	
+
 						var featureLayer = this._createLayer(feat, pxPerExtent);
-	
+
 						for (var j = 0; j < styleOptions.length; j++) {
 							var style = L.extend({}, L.Path.prototype.options, styleOptions[j]);
 							featureLayer.render(renderer, style);
 							renderer._addPath(featureLayer);
 						}
-	
+
 						if (this.options.interactive) {
 							featureLayer.makeInteractive();
 						}
-	
+
 						if (storeFeatures) {
 							renderer._features[id] = {
 								layerName: layerName,
@@ -131,15 +131,15 @@ L.VectorGrid = L.GridLayer.extend({
 							};
 						}
 					}
-	
+
 				}
-	
+
 			}
-		
+
 			if (this._map != null) {
 				renderer.addTo(this._map);
 			}
-	
+
 			L.Util.requestAnimFrame(done.bind(coords, null, null));
 
 		}.bind(this));
@@ -217,6 +217,8 @@ L.VectorGrid = L.GridLayer.extend({
 		switch (feat.type) {
 		case 1:
 			layer = new PointSymbolizer(feat, pxPerExtent);
+			//prevent leaflet from treating these canvas points as real markers
+			layer.getLatLng = null;
 			break;
 		case 2:
 			layer = new LineSymbolizer(feat, pxPerExtent);
