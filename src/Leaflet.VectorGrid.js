@@ -94,8 +94,7 @@ L.VectorGrid = L.GridLayer.extend({
 						var id;
 	
 						if (this.options.filter instanceof Function &&
-							!this.options.filter(feat.properties, coords.z)
-						) {
+							!this.options.filter(feat.properties, coords.z)) {
 							continue;
 						}
 
