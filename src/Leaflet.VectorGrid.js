@@ -33,6 +33,12 @@ L.VectorGrid = L.GridLayer.extend({
 		// A function that, given a vector feature, returns an unique identifier for it, e.g.
 		// `function(feat) { return feat.properties.uniqueIdField; }`.
 		// Must be defined for `setFeatureStyle` to work.
+
+		// 🍂option filter: Function = undefined
+		// A Function that will be used to decide whether to include a feature or not
+		// depending on feature properties and zoom, e.g.
+		// `function(properties, zoom) { return true; }`.
+		// The default is to include all features. Similar to L.GeoJSON filter option.
 	},
 
 	initialize: function(options) {
@@ -87,6 +93,11 @@ L.VectorGrid = L.GridLayer.extend({
 						var feat = layer.features[i];
 						var id;
 	
+						if (this.options.filter instanceof Function &&
+							!this.options.filter(feat.properties, coords.z)) {
+							continue;
+						}
+
 						var styleOptions = layerStyle;
 						if (storeFeatures) {
 							id = this.options.getFeatureId(feat);
@@ -187,6 +198,14 @@ L.VectorGrid = L.GridLayer.extend({
 				this._updateStyles(feat, tile, styleOptions);
 			}
 		}
+		return this;
+	},
+
+	// 🍂method setFilter(filterFn: Function): this
+	// Sets filter function to filter displayed features.
+	setFilter: function (filterFn) {
+		this.options.filter = filterFn;
+		this.redraw();
 		return this;
 	},
 
