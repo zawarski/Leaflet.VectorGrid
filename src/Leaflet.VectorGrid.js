@@ -136,10 +136,16 @@ L.VectorGrid = L.GridLayer.extend({
 						}
 	
 						if (storeFeatures) {
-							renderer._features[id] = {
+							// multiple features may share the same id, add them
+							// to an array of features
+							if (!renderer._features[id]) {
+								renderer._features[id] = [];
+							}
+
+							renderer._features[id].push({
 								layerName: layerName,
 								feature: featureLayer
-							};
+							});
 						}
 					}
 	
@@ -166,17 +172,18 @@ L.VectorGrid = L.GridLayer.extend({
 
 		for (var tileKey in this._vectorTiles) {
 			var tile = this._vectorTiles[tileKey];
-			var features = tile._features;
-			var data = features[id];
-			if (data) {
-				var feat = data.feature;
+			var features = tile._features[id];
+			if (features) {
+				for (var i=0; i<features.length; i++) {
+                    var feature = features[i];
 
-				var styleOptions = layerStyle;
-				if (layerStyle[data.layerName]) {
-					styleOptions = layerStyle[data.layerName];
-				}
+                    var styleOptions = layerStyle;
+                    if (layerStyle[feature.layerName]) {
+                        styleOptions = layerStyle[feature.layerName];
+                    }
 
-				this._updateStyles(feat, tile, styleOptions);
+                    this._updateStyles(feature.feature, tile, styleOptions);
+                }
 			}
 		}
 		return this;
@@ -189,13 +196,15 @@ L.VectorGrid = L.GridLayer.extend({
 
 		for (var tileKey in this._vectorTiles) {
 			var tile = this._vectorTiles[tileKey];
-			var features = tile._features;
-			var data = features[id];
-			if (data) {
-				var feat = data.feature;
-				var styleOptions = this.options.vectorTileLayerStyles[ data.layerName ] ||
-				L.Path.prototype.options;
-				this._updateStyles(feat, tile, styleOptions);
+			var features = tile._features[id];
+			if (features) {
+				for (var i=0; i<features.length; i++) {
+					var feature = features[i];
+
+                    var styleOptions = this.options.vectorTileLayerStyles[feature.layerName] ||
+                        L.Path.prototype.options;
+                    this._updateStyles(feature.feature, tile, styleOptions);
+                }
 			}
 		}
 		return this;
